@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="로그인"
+        android:id="@+id/menu_login"></item>
+
+    <item android:title="캐리어 연결"
+        android:id="@+id/menu_carrer_connect"></item>
+
+    <item android:title="설정"
+        android:id="@+id/menu_settings"></item>
+
+    <item android:title="로그아웃"
+        android:id="@+id/menu_logout"></item>
+</menu>
