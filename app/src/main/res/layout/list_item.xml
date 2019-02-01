@@ -21,7 +21,9 @@
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:srcCompat="@mipmap/ic_launcher" />
+                android:paddingLeft="20dp"
+                android:paddingTop="0dp"
+                app:srcCompat="@mipmap/ic_launcher_round" />
 
         </LinearLayout>
 
@@ -29,10 +31,12 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <TextView
-                android:id="@+id/age"
+                android:id="@+id/Date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -41,7 +45,7 @@
                 tools:layout_editor_absoluteY="84dp" />
 
             <TextView
-                android:id="@+id/id"
+                android:id="@+id/Time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -50,7 +54,7 @@
                 tools:layout_editor_absoluteY="84dp" />
 
             <TextView
-                android:id="@+id/name"
+                android:id="@+id/Cost"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

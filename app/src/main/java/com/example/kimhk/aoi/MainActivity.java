@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     InputStream mInputStream = null;
     int mPariedDeviceCount = 1;
     Button btn_Nologin;
-
+    public static Intent Mypage_intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
         btn_Nologin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), Mypage.class);
-                startActivityForResult(intent, 1000);
+                Mypage_intent = new Intent(getApplicationContext(), Mypage.class);
+                startActivityForResult(Mypage_intent, 1000);
             }
         });
 

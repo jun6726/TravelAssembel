@@ -28,10 +28,11 @@ import java.util.HashMap;
 public class Mypage extends Activity {
     String myJSON;
     private static final String TAG_RESULTS = "result";
-    private static final String TAG_IMAGE = "image";
-    private static final String TAG_ID="id";
-    private static final String TAG_NAME="name";
-    private static final String TAG_AGE="age";
+    private static final String TAG_Date = "Date";
+    private static final String TAG_Time="Time";
+    private static final String TAG_Cost="Cost";
+
+    public static Intent Map_intent;
 
     JSONArray peoples = null;
     ArrayList<HashMap<String, String>> personList;
@@ -47,14 +48,14 @@ public class Mypage extends Activity {
         btn_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), MapActivity.class);
-                startActivity(intent);
+                Map_intent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(Map_intent);
             }
         });
 
         list = (ListView) findViewById(R.id.listView);
         personList = new ArrayList<HashMap<String, String>>();
-        getData("http://jun6726.cafe24.com/php_connection.php"); //수정 필요
+        getData("http://jun6726.cafe24.com/Travel_list.php"); //수정 필요
     }
     protected void showList() {
         try {
@@ -63,27 +64,24 @@ public class Mypage extends Activity {
 
             for (int i = 0; i < peoples.length(); i++) {
                 JSONObject c = peoples.getJSONObject(i);
-                String image = c.getString(TAG_IMAGE);
-                String id = c.getString(TAG_ID);
-                String name = c.getString(TAG_NAME);
-                String age = c.getString(TAG_AGE);
+                String Date = c.getString(TAG_Date);
+                String Time = c.getString(TAG_Time);
+                String Cost = c.getString(TAG_Cost);
 
 
                 HashMap<String, String> persons = new HashMap<String, String>();
 
-                persons.put(TAG_IMAGE, image);
-                persons.put(TAG_ID, id);
-                persons.put(TAG_NAME, name);
-                persons.put(TAG_AGE, age);
-
+                persons.put(TAG_Date, Date);
+                persons.put(TAG_Time, Time);
+                persons.put(TAG_Cost, Cost);
 
                 personList.add(persons);
             }
 
             ListAdapter adapter = new SimpleAdapter(
                     Mypage.this, personList, R.layout.list_item,
-                    new String[]{TAG_IMAGE, TAG_ID, TAG_NAME, TAG_AGE},
-                    new int[]{R.id.imageView, R.id.id, R.id.name, R.id.age}
+                    new String[]{TAG_Date, TAG_Time, TAG_Cost},
+                    new int[]{R.id.Date, R.id.Time, R.id.Cost}
             );
 
             list.setAdapter(adapter);
