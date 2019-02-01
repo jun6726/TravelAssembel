@@ -61,21 +61,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    private static final float DEFAULT_ZOOM = 15f;
     public MarkerOptions mOptions;
 
-    //vars
     private Boolean mLocationPermissionsGranted = false;
-    private static final String TAG = "MapActivity";
     Marker marker = null; // 마커 변수
     private ArrayList<Marker> arrMarkerList; // 마커 리스트 변수
     private Geocoder geocoder;
-    private Button button;
-    private EditText editText;
     private GoogleMap mMap; // 구글맵변수
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;//검색창 위치 자동완성
-
 
     LatLng center;
     CardView cardView;
@@ -115,7 +109,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         getLocationPermission();
-
     }
 
     //주소값 메세지
@@ -129,15 +122,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         double lon = latLng.longitude;
         arrMarkerList.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lit, lon))));
 
-
-
-
         if (arrMarkerList.size() > 1) {
             PolylineOptions polylineOptions = new PolylineOptions();
             for (Marker marker : arrMarkerList) {
                 polylineOptions.add(marker.getPosition());
-
-
             }
         }
     }
@@ -152,7 +140,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show(); // 정상작동시 텍스트 활성화
-        Log.d(TAG, "onMapReady: map is ready");
         mMap = googleMap;
         geocoder = new Geocoder(this);
 
@@ -176,7 +163,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 mMap.addMarker(mOptions);
                 String str_latitude = String.valueOf(latitude);
                 String str_longitude = String.valueOf(longitude);
-
             }
         });
         initCameraIdle();//카메라 함수
@@ -195,26 +181,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     }
     //주소값 얻기
     private void getAddressFromLocation(double latitude, double longitude) {
-
         Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
-
 
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-
             if (addresses.size() > 0) {
                 Address fetchedAddress = addresses.get(0);
                 StringBuilder strAddress = new StringBuilder();
                 for (int i = 0; i < fetchedAddress.getMaxAddressLineIndex(); i++) {
                     strAddress.append(fetchedAddress.getAddressLine(i)).append(" ");
                 }
-
                 txtLocationAddress.setText(strAddress.toString());
-
             } else {
                 txtLocationAddress.setText("Searching Current Address");
             }
-
         } catch (IOException e) {
             e.printStackTrace();
             printToast("Could not get address..!");
@@ -230,7 +210,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 return;
             }
             mMap.setMyLocationEnabled(true); // 현재위치 활성화
-
             mMap.getUiSettings().setMyLocationButtonEnabled(true); //현재위치 버튼
         }
     }
@@ -245,84 +224,61 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 } else {
                     txtLocationAddress.setText(place.getAddress());
                 }
-
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 16);
                 mMap.animateCamera(cameraUpdate);
-
-
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
                 printToast("Error in retrieving place info");
-
             }
         }
     }
 
     private void getDeviceLocation(){
-        Log.d(TAG, "getDeviceLocation: getting the devices current location");
-
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
         try{
             if(mLocationPermissionsGranted){
-
                 final Task location = mFusedLocationProviderClient.getLastLocation();
                 location.addOnCompleteListener(new OnCompleteListener() {
                     @Override
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()&&task.getResult()!=null){
-                            Log.d(TAG, "onComplete: found location!");
                             Location currentLocation = (Location) task.getResult();
-
 //                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
 //                                    DEFAULT_ZOOM);
-
                         }else{
-                            Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
             }
         }catch (SecurityException e){
-            Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage() );
         }
     }
 
     private void initMap(){
-        Log.d(TAG, "initMap: initializing map");
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-
         mapFragment.getMapAsync(MapActivity.this);
     }
 
     //현재위치 퍼미션
     private void getLocationPermission(){
-        Log.d(TAG, "getLocationPermission: getting location permissions");
-        String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION};
+        String[] permissions = {android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
 
-        if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
-            if(ContextCompat.checkSelfPermission(this.getApplicationContext(),
-                    COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+        if(ContextCompat.checkSelfPermission(this.getApplicationContext(), FINE_LOCATION) == PackageManager.PERMISSION_GRANTED){
+            if(ContextCompat.checkSelfPermission(this.getApplicationContext(), COURSE_LOCATION) == PackageManager.PERMISSION_GRANTED){
                 mLocationPermissionsGranted = true;
                 initMap();
             }else{
-                ActivityCompat.requestPermissions(this,
-                        permissions,
-                        LOCATION_PERMISSION_REQUEST_CODE);
+                ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
             }
         }else{
-            ActivityCompat.requestPermissions(this,
-                    permissions,
-                    LOCATION_PERMISSION_REQUEST_CODE);
+            ActivityCompat.requestPermissions(this, permissions, LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
 
     // 퍼미션 실패 시 코드
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        Log.d(TAG, "onRequestPermissionsResult: called.");
         mLocationPermissionsGranted = false;
 
         switch(requestCode){
@@ -331,11 +287,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     for(int i = 0; i < grantResults.length; i++){
                         if(grantResults[i] != PackageManager.PERMISSION_GRANTED){
                             mLocationPermissionsGranted = false;
-                            Log.d(TAG, "onRequestPermissionsResult: permission failed");
                             return;
                         }
                     }
-                    Log.d(TAG, "onRequestPermissionsResult: permission granted");
                     mLocationPermissionsGranted = true;
                     //initialize our map
                     initMap();
@@ -343,7 +297,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }
     }
-
 
 // Marking lat. long. on the GoogleMaps
     private void addMarker(LatLng latlng) {
@@ -369,20 +322,17 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             try {
                 url = new URL(strUrl);
 
-                HttpURLConnection connection = (HttpURLConnection) url
-                        .openConnection();
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("POST");
                 connection.setDoOutput(true);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(
-                        connection.getOutputStream());
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
 
                 outputStreamWriter.write("lat=" + lat + "&lon=" + lon);
                 outputStreamWriter.flush();
                 outputStreamWriter.close();
 
                 InputStream iStream = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new
-                        InputStreamReader(iStream));
+                BufferedReader reader = new BufferedReader(new InputStreamReader(iStream));
 
                 StringBuffer sb = new StringBuffer();
 
@@ -391,16 +341,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 while ((line = reader.readLine()) != null) {
                     sb.append(line);
                 }
-
                 reader.close();
                 iStream.close();
-
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
     }

@@ -27,12 +27,9 @@ import java.util.List;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
-    BluetoothSocket mSocket = null;
-    OutputStream mOutputStream = null;
-    InputStream mInputStream = null;
-    int mPariedDeviceCount = 1;
+    int mPariedDeviceCount = 1; // 블루투스 연결 확인 변수
     Button btn_Nologin;
-    public static Intent Mypage_intent;
+    public static Intent Mypage_intent, Login_intent; //마이페이지 인텐트
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,11 +45,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(Mypage_intent, 1000);
             }
         });
-
-
     }
-    //메뉴바 쓸 수 있는 함수
-    @Override
+
+    //메뉴바 인플레이터
+     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
@@ -62,12 +58,10 @@ public class MainActivity extends AppCompatActivity {
     //메뉴바 옵션 선택 함수
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         switch (item.getItemId()) {
-
             case R.id.menu_login:
-                Intent intent = new Intent(getApplicationContext(), com.example.kimhk.aoi.Login.class);
-                startActivityForResult(intent, 1000);
+                Login_intent = new Intent(getApplicationContext(), com.example.kimhk.aoi.Login.class);
+                startActivityForResult(Login_intent, 1000);
                 break;
                 //캐리어 연결
             case R.id.menu_carrer_connect:
@@ -177,19 +171,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        try{
-//            mWorkerThread.interrupt(); // 데이터 수신 쓰레드 종료
-            mInputStream.close();
-            mOutputStream.close();
-            mSocket.close();
-        }catch(Exception e){}
-        super.onDestroy();
-
-
-    }
-
-    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case 1:
@@ -204,10 +185,6 @@ public class MainActivity extends AppCompatActivity {
                 }
                 break;
         }
-
-
         super.onActivityResult(requestCode, resultCode, data);
     }
-
 }
-
