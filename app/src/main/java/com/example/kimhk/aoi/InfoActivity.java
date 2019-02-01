@@ -3,6 +3,7 @@ package com.example.kimhk.aoi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
@@ -41,6 +44,7 @@ import java.text.DateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 /**
@@ -124,11 +128,14 @@ public class InfoActivity extends AppCompatActivity {
                 send.execute("http://jun6726.cafe24.com/Time_send.php", Date, Time, Cost);
                 Toast.makeText(InfoActivity.this, "제출", Toast.LENGTH_SHORT).show();
 
-                startActivity(MainActivity.Mypage_intent);
+                Mypage.Map_intent = new Intent();
+                Mypage.Map_intent.putExtra("put_lat","12.0000");
+                Mypage.Map_intent.putExtra("put_long", "34.231312");
+                setResult(3000,Mypage.Map_intent);
+                finish();
             }
         });
     }
-
     public class Time_send extends AsyncTask<String, Void, String> {
 
         @Override

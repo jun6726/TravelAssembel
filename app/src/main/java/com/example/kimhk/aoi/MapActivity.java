@@ -52,12 +52,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by kimhk on 2019-01-20.
  */
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMapClickListener, GoogleMap.OnMarkerClickListener {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -71,6 +72,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;//검색창 위치 자동완성
 
+    public double lat, lon;
+    public Double latitude, longitude;
+
+    Intent Info_Intent;
     LatLng center;
     CardView cardView;
     TextView txtLocationAddress;
@@ -91,9 +96,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent =
-                            new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN)
-                                    .build(MapActivity.this);
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(MapActivity.this);
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
                     printToast("Google Play Service Repair");
@@ -104,8 +107,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         getLocationPermission();
@@ -114,27 +116,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //주소값 메세지
     private void printToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onMapClick(LatLng latLng) {
-        double lit = latLng.latitude;
-        double lon = latLng.longitude;
-        arrMarkerList.add(mMap.addMarker(new MarkerOptions().position(new LatLng(lit, lon))));
-
-        if (arrMarkerList.size() > 1) {
-            PolylineOptions polylineOptions = new PolylineOptions();
-            for (Marker marker : arrMarkerList) {
-                polylineOptions.add(marker.getPosition());
-            }
-        }
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        Intent intent_test = new Intent(getApplication(), InfoActivity.class);
-        startActivity(intent_test);
-        return true;
     }
 
     @Override
@@ -149,24 +130,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 addMarker(latLng);
                 sendToServer(latLng);
 
-                mOptions = new MarkerOptions();
-                // 마커 타이틀
-                mOptions.title("마커 좌표");
-                Double latitude = latLng.latitude; // 위도
-                Double longitude = latLng.longitude; // 경도
-                // 마커의 스니펫(간단한 텍스트) 설정
-                mOptions.snippet(latitude.toString() + ", " + longitude.toString());
-                // LatLng: 위도 경도 쌍을 나타냄
-                mOptions.position(new LatLng(latitude, longitude));
+                latitude = latLng.latitude; // 위도
+                longitude = latLng.longitude; // 경도
 
-                // 마커(핀) 추가 이게 미스테리
-                mMap.addMarker(mOptions);
-                String str_latitude = String.valueOf(latitude);
-                String str_longitude = String.valueOf(longitude);
+                Info_Intent = new Intent(getApplicationContext(), InfoActivity.class);
+                startActivity(Info_Intent);
             }
         });
         initCameraIdle();//카메라 함수
-        mMap.setOnMarkerClickListener(this);
     }
 
     //카메라 함수
@@ -302,7 +273,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private void addMarker(LatLng latlng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latlng);
-        markerOptions.title(latlng.latitude + "," + latlng.longitude);
         mMap.addMarker(markerOptions);
     }
 
