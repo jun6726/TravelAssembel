@@ -62,7 +62,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
-    public MarkerOptions mOptions;
 
     private Boolean mLocationPermissionsGranted = false;
     Marker marker = null; // 마커 변수
@@ -96,14 +95,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 try {
-                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_FULLSCREEN).build(MapActivity.this);
+                    Intent intent = new PlaceAutocomplete.IntentBuilder(PlaceAutocomplete.MODE_OVERLAY).build(MapActivity.this);
                     startActivityForResult(intent, PLACE_AUTOCOMPLETE_REQUEST_CODE);
                 } catch (GooglePlayServicesRepairableException e) {
-                    printToast("Google Play Service Repair");
                 } catch (GooglePlayServicesNotAvailableException e) {
-                    printToast("Google Play Service Not Available");
-                }
-            }
+                }}
         });
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -113,14 +109,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         getLocationPermission();
     }
 
-    //주소값 메세지
-    private void printToast(String message) {
-        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        Toast.makeText(this, "Map is Ready", Toast.LENGTH_SHORT).show(); // 정상작동시 텍스트 활성화
         mMap = googleMap;
         geocoder = new Geocoder(this);
 
@@ -130,14 +120,64 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 addMarker(latLng);
                 sendToServer(latLng);
 
-                latitude = latLng.latitude; // 위도
-                longitude = latLng.longitude; // 경도
-
                 Info_Intent = new Intent(getApplicationContext(), InfoActivity.class);
                 startActivity(Info_Intent);
             }
         });
         initCameraIdle();//카메라 함수
+    }
+    
+    // Marking lat. long. on the GoogleMaps
+    private void addMarker(LatLng latlng) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(latlng);
+        mMap.addMarker(markerOptions);
+    }
+
+    // Enjoining bg thread to save marker inMySQL server
+    private void sendToServer(LatLng latlng) {
+        new SaveTask().execute(latlng);
+    }
+
+    // bg thread to save the marker in MySQL server
+    private class SaveTask extends AsyncTask<LatLng, Void, Void> {
+        @Override
+        protected Void doInBackground(LatLng... params) {
+            String lat = Double.toString(params[0].latitude);
+            String lon = Double.toString(params[0].longitude);
+            String strUrl = "http://jun6726.cafe24.com/info.php";
+            URL url = null;
+            try {
+                url = new URL(strUrl);
+
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("POST");
+                connection.setDoOutput(true);
+                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
+
+                outputStreamWriter.write("lat=" + lat + "&lon=" + lon);
+                outputStreamWriter.flush();
+                outputStreamWriter.close();
+
+                InputStream iStream = connection.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(iStream));
+
+                StringBuffer sb = new StringBuffer();
+
+                String line = "";
+
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+                reader.close();
+                iStream.close();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
     }
 
     //카메라 함수
@@ -153,7 +193,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     //주소값 얻기
     private void getAddressFromLocation(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
-
         try {
             List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
             if (addresses.size() > 0) {
@@ -168,7 +207,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         } catch (IOException e) {
             e.printStackTrace();
-            printToast("Could not get address..!");
         }
         arrMarkerList = new ArrayList<>(); // 다중마커 리스트 선언
         // 현재 위치 퍼미션 허가
@@ -198,9 +236,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 16);
                 mMap.animateCamera(cameraUpdate);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
-                printToast("Error in retrieving place info");
-            }
-        }
+            }}
     }
 
     private void getDeviceLocation(){
@@ -266,59 +302,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     initMap();
                 }
             }
-        }
-    }
-
-// Marking lat. long. on the GoogleMaps
-    private void addMarker(LatLng latlng) {
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latlng);
-        mMap.addMarker(markerOptions);
-    }
-
-    // Enjoining bg thread to save marker inMySQL server
-    private void sendToServer(LatLng latlng) {
-        new SaveTask().execute(latlng);
-    }
-
-    // bg thread to save the marker in MySQL server
-    private class SaveTask extends AsyncTask<LatLng, Void, Void> {
-        @Override
-        protected Void doInBackground(LatLng... params) {
-            String lat = Double.toString(params[0].latitude);
-            String lon = Double.toString(params[0].longitude);
-            String strUrl = "http://jun6726.cafe24.com/info.php";
-            URL url = null;
-            try {
-                url = new URL(strUrl);
-
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
-
-                outputStreamWriter.write("lat=" + lat + "&lon=" + lon);
-                outputStreamWriter.flush();
-                outputStreamWriter.close();
-
-                InputStream iStream = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(iStream));
-
-                StringBuffer sb = new StringBuffer();
-
-                String line = "";
-
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                reader.close();
-                iStream.close();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
         }
     }
 }

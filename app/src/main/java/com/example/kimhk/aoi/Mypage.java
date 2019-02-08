@@ -28,18 +28,15 @@ import java.util.HashMap;
  */
 
 public class Mypage extends Activity {
-    String myJSON, itemJSON;
+    String myJSON;
     private static final String TAG_RESULTS = "result";
     private static final String TAG_Date = "Date";
     private static final String TAG_Time="Time";
     private static final String TAG_Cost="Cost";
 
-    private static final String SELECT_ITEM = "select_item";
-
-    public static Intent Map_intent;
+    public static Intent Map_intent, Item_select_intent;
 
     JSONArray Travels = null;
-    JSONArray Travel_item = null;
     ArrayList<HashMap<String, String>> Travel_Array_list;
 
     ListView Travel_List;
@@ -63,9 +60,9 @@ public class Mypage extends Activity {
         Travel_Array_list = new ArrayList<HashMap<String, String>>();
         getData("http://jun6726.cafe24.com/Travel_list.php"); //수정 필요
     }
-    protected void showList() {
+    public void showList() {
         try {
-            final JSONObject jsonObj = new JSONObject(myJSON);
+            JSONObject jsonObj = new JSONObject(myJSON);
             Travels = jsonObj.getJSONArray(TAG_RESULTS);
 
             for (int i = 0; i < Travels.length(); i++) {
@@ -94,6 +91,9 @@ public class Mypage extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     Toast.makeText(Mypage.this, (position+1)+"번째 일정 선택", Toast.LENGTH_SHORT).show();
+                    Item_select_intent = new Intent(getApplicationContext(), ItemSelect.class);
+                    Item_select_intent.putExtra("position",position+1);
+                    startActivity(Item_select_intent);
                 }
             });
         } catch (JSONException e) {
@@ -127,12 +127,10 @@ public class Mypage extends Activity {
                 } catch (Exception e) {
                     return null;
                 }
-
-
             }
 
             @Override
-            protected void onPostExecute(String result) {
+            public void onPostExecute(String result) {
                 myJSON = result;
                 showList();
             }
