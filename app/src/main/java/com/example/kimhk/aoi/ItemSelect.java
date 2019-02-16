@@ -198,7 +198,7 @@ public class ItemSelect extends Activity {
             }
 
             ListAdapter adapter = new SimpleAdapter(
-                    ItemSelect.this, Array_list, R.layout.list_item1,
+                    ItemSelect.this, Array_list, R.layout.list_item_selected,
                     new String[]{TAG_Date, TAG_Time, TAG_Cost},
                     new int[]{R.id.Date, R.id.Time, R.id.Cost}
             );
