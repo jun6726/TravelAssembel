@@ -207,6 +207,4 @@ public class ItemSelect extends Activity {
             e.printStackTrace();
         }
     }
-
-
-}
+} // 02.16 소스트리 공유 테스트
