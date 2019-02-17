@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
+import java.net.IDN;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +31,7 @@ import java.util.HashMap;
 public class Mypage extends Activity {
     String myJSON;
     private static final String TAG_RESULTS = "result";
+    private static final String TAG_ID = "ID";
     private static final String TAG_Date = "Date";
     private static final String TAG_Time="Time";
     private static final String TAG_Cost="Cost";
@@ -67,12 +69,15 @@ public class Mypage extends Activity {
 
             for (int i = 0; i < Travels.length(); i++) {
                 JSONObject c = Travels.getJSONObject(i);
+
+                String ID = c.getString(TAG_ID);
                 String Date = c.getString(TAG_Date);
                 String Time = c.getString(TAG_Time);
                 String Cost = c.getString(TAG_Cost);
 
                 HashMap<String, String> persons = new HashMap<String, String>();
 
+                persons.put(TAG_ID, ID);
                 persons.put(TAG_Date, Date);
                 persons.put(TAG_Time, Time);
                 persons.put(TAG_Cost, Cost);
@@ -82,17 +87,16 @@ public class Mypage extends Activity {
 
             ListAdapter adapter = new SimpleAdapter(
                     Mypage.this, Travel_Array_list, R.layout.list_item,
-                    new String[]{TAG_Date, TAG_Time, TAG_Cost},
-                    new int[]{R.id.Date, R.id.Time, R.id.Cost}
+                    new String[]{TAG_ID, TAG_Date, TAG_Time, TAG_Cost},
+                    new int[]{R.id.ID , R.id.Date, R.id.Time, R.id.Cost}
             );
             Travel_List.setAdapter(adapter);
 
             Travel_List.setOnItemClickListener(new ListView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-                    Toast.makeText(Mypage.this, (position+1)+"번째 일정 선택", Toast.LENGTH_SHORT).show();
                     Item_select_intent = new Intent(getApplicationContext(), ItemSelect.class);
-                    Item_select_intent.putExtra("position",position+1);
+                    Item_select_intent.putExtra("position",Travel_Array_list.get(position).get(TAG_ID));
                     startActivity(Item_select_intent);
                 }
             });

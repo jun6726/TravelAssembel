@@ -43,7 +43,6 @@ import java.util.Map;
 
 public class ItemSelect extends Activity {
     public int getData_position;
-    TextView tv_position, tv_travel_date;
     Button button;
     ListView listView;
     JSONArray Travels1 = null;
@@ -57,13 +56,9 @@ public class ItemSelect extends Activity {
 
         final Intent getData_Intent = getIntent();
         getData_position = getData_Intent.getExtras().getInt("position");
-        tv_position = (TextView) findViewById(R.id.tv_position);
-        tv_travel_date = (TextView) findViewById(R.id.tv_travel_date);
         button = (Button) findViewById(R.id.button);
         listView = (ListView) findViewById(R.id.listVIew);
         Array_list = new ArrayList<HashMap<String, String>>();
-
-        tv_position.setText(getData_position + "번째 일정");
 
         Position_send position_send = new Position_send();
 
@@ -84,8 +79,8 @@ public class ItemSelect extends Activity {
 
             String URL = (String) params[0];
             String position = (String) params[1];
+            String parameter = "position=" + position;
 
-            Log.e("position", "Position!!!" + position);
             try{
                 URL url = new URL(URL);
                 HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
@@ -93,7 +88,7 @@ public class ItemSelect extends Activity {
                 httpURLConnection.setConnectTimeout(5000);
                 httpURLConnection.setDoOutput(true);
                 httpURLConnection.setDoInput(true);
-                httpURLConnection.setRequestMethod("GET");
+                httpURLConnection.setRequestMethod("POST");
                 httpURLConnection.connect();
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
@@ -119,13 +114,10 @@ public class ItemSelect extends Activity {
                 return sb.toString();
 
             } catch (ProtocolException e) {
-                Log.d("ProtocolException", "ProtocolException");
                 e.printStackTrace();
             } catch (MalformedURLException e) {
-                Log.d("MalformedURLException","MalformedURLException");
                 e.printStackTrace();
             } catch (IOException e) {
-                Log.d("IOException","IOException");
                 e.printStackTrace();
             }
             return null;
@@ -134,6 +126,7 @@ public class ItemSelect extends Activity {
 
     String myJSON1;
     private static final String TAG_RESULTS = "result";
+    private static final String TAG_ID = "ID";
     private static final String TAG_Date = "Date";
     private static final String TAG_Time="Time";
     private static final String TAG_Cost="Cost";
@@ -159,9 +152,7 @@ public class ItemSelect extends Activity {
                     while ((json = bufferedReader.readLine()) != null) {
                         sb.append(json + "\n");
                     }
-
                     return sb.toString().trim();
-
                 } catch (Exception e) {
                     return null;
                 }
@@ -184,12 +175,15 @@ public class ItemSelect extends Activity {
 
             for (int i = 0; i < Travels1.length(); i++) {
                 JSONObject c = Travels1.getJSONObject(i);
+
+                String ID = c.getString(TAG_ID);
                 String Date = c.getString(TAG_Date);
                 String Time = c.getString(TAG_Time);
                 String Cost = c.getString(TAG_Cost);
 
                 HashMap<String, String> persons = new HashMap<String, String>();
 
+                persons.put(TAG_ID, ID);
                 persons.put(TAG_Date, Date);
                 persons.put(TAG_Time, Time);
                 persons.put(TAG_Cost, Cost);
@@ -198,9 +192,9 @@ public class ItemSelect extends Activity {
             }
 
             ListAdapter adapter = new SimpleAdapter(
-                    ItemSelect.this, Array_list, R.layout.list_item_selected,
-                    new String[]{TAG_Date, TAG_Time, TAG_Cost},
-                    new int[]{R.id.Date, R.id.Time, R.id.Cost}
+                    ItemSelect.this, Array_list, R.layout.list_item,
+                    new String[]{TAG_ID, TAG_Date, TAG_Time, TAG_Cost},
+                    new int[]{R.id.ID, R.id.Date, R.id.Time, R.id.Cost}
             );
             listView.setAdapter(adapter);
         } catch (JSONException e) {

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,6 +28,16 @@ import com.kakao.usermgmt.response.model.UserProfile;
 import com.kakao.util.exception.KakaoException;
 import com.kakao.util.helper.log.Logger;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
@@ -35,11 +46,14 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Login extends AppCompatActivity {
     private SessionCallback callback;
-    TextView user_nickname, user_email;
+    public TextView user_nickname, user_email;
     CircleImageView user_img;
     LinearLayout success_layout;
     Button logout_btn,mypage;
     LoginButton loginButton;
+    public String nickname;
+    public long Id;
+
     public static Login mrequestLogout; // 메인에서 로그아웃 함수 불러주기 위한 변수
     AQuery aQuery;
 
@@ -83,6 +97,10 @@ public class Login extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (Session.getCurrentSession().isOpened()) {
+
+                    username_send username_send = new username_send();
+                    username_send.execute("http://jun6726.cafe24.com/username_test.php",nickname, String.valueOf(Id));
+                    Log.d("닉네임",nickname);
                     requestLogout();
                 }
             }
@@ -110,7 +128,6 @@ public class Login extends AppCompatActivity {
 
         return false;
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -185,6 +202,12 @@ public class Login extends AppCompatActivity {
                 user_nickname.setText(userProfile.getNickname());
                 user_email.setText(userProfile.getEmail());
                 aQuery.id(user_img).image(userProfile.getThumbnailImagePath()); // <- 프로필 작은 이미지 , userProfile.getProfileImagePath() <- 큰 이미지
+                Log.d("온 석세스", userProfile.getNickname());
+
+
+                Id = userProfile.getId();
+               nickname = userProfile.getNickname();
+
             }
 
             @Override
@@ -200,5 +223,56 @@ public class Login extends AppCompatActivity {
         Session.getCurrentSession().removeCallback(callback);
     }
 
+    public class username_send extends AsyncTask<String, Void, String> {
 
+        @Override
+        public String doInBackground(String... params) {
+
+            String serverURL = (String)params[0];
+            String username = (String)params[1];
+            String userid = (String)params[2];
+            String paramerter = "username=" + username + "&userid=" + userid;
+
+            try{
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(paramerter.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                InputStream inputStream;
+                inputStream = httpURLConnection.getInputStream();
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+
+                return sb.toString();
+
+
+            }catch (ProtocolException e) {
+                e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
 }

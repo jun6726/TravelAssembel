@@ -36,6 +36,15 @@
             android:paddingTop="5dp">
 
             <TextView
+                android:id="@+id/ID"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                tools:layout_editor_absoluteX="75dp"
+                tools:layout_editor_absoluteY="84dp" />
+
+            <TextView
                 android:id="@+id/Date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
