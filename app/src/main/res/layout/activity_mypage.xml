@@ -14,9 +14,10 @@
 
 
     </ListView>
+
     <Button
         android:id="@+id/btn_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="일정" />
+        android:text="일정 추가" />
 </LinearLayout>

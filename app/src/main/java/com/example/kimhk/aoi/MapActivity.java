@@ -2,6 +2,7 @@ package com.example.kimhk.aoi;
 
 import android.*;
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
@@ -13,6 +14,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
@@ -178,6 +180,26 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
             return null;
         }
+    }
+    public boolean onMarkerClick(final Marker marker) {
+        AlertDialog.Builder dlg = new AlertDialog.Builder(MapActivity.this);
+        dlg.setTitle("마커 위치");
+        dlg.setNegativeButton("마커 삭제", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                marker.remove();
+            }
+        });
+
+        dlg.setPositiveButton("일정 추가", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                Intent intent_test = new Intent(getApplication(), InfoActivity.class);
+                startActivity(intent_test);
+            }
+        });
+        dlg.show();
+        return true;
     }
 
     //카메라 함수

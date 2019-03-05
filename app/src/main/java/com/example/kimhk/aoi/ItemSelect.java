@@ -15,6 +15,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.GoogleMap;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -42,8 +44,9 @@ import java.util.Map;
  */
 
 public class ItemSelect extends Activity {
-    public int getData_position;
-    Button button;
+
+    private GoogleMap select_map;
+    public String getData_position;
     ListView listView;
     JSONArray Travels1 = null;
 
@@ -55,21 +58,15 @@ public class ItemSelect extends Activity {
         setContentView(R.layout.list_item_selected);
 
         final Intent getData_Intent = getIntent();
-        getData_position = getData_Intent.getExtras().getInt("position");
-        button = (Button) findViewById(R.id.button);
+        getData_position = getData_Intent.getExtras().getString("position");
+
+        Log.d("getData_position","getData_position"+getData_position);
         listView = (ListView) findViewById(R.id.listVIew);
         Array_list = new ArrayList<HashMap<String, String>>();
 
         Position_send position_send = new Position_send();
 
-        position_send.execute("http://jun6726.cafe24.com/Item_select.php", String.valueOf(getData_position));
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    getData("http://jun6726.cafe24.com/Item_select.php");
-            }
-        });
+        position_send.execute("http://jun6726.cafe24.com/Item_select.php", getData_position);
     }
 
     public class Position_send extends AsyncTask<String, Void, String>
@@ -79,7 +76,7 @@ public class ItemSelect extends Activity {
 
             String URL = (String) params[0];
             String position = (String) params[1];
-            String parameter = "position=" + position;
+            String parameter = "&position=" + position;
 
             try{
                 URL url = new URL(URL);
@@ -92,7 +89,7 @@ public class ItemSelect extends Activity {
                 httpURLConnection.connect();
 
                 OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(position.getBytes("UTF-8"));
+                outputStream.write(parameter.getBytes("UTF-8"));
                 outputStream.flush();
                 outputStream.close();
 
@@ -110,7 +107,7 @@ public class ItemSelect extends Activity {
                     sb.append(line);
                 }
                 bufferedReader.close();
-                getData("http://jun6726.cafe24.com/Item_select.php");
+
                 return sb.toString();
 
             } catch (ProtocolException e) {
@@ -122,6 +119,12 @@ public class ItemSelect extends Activity {
             }
             return null;
         }
+
+        @Override
+        public void onPostExecute(String result) {
+            myJSON1 = result;
+            showList();
+        }
     }
 
     String myJSON1;
@@ -130,43 +133,6 @@ public class ItemSelect extends Activity {
     private static final String TAG_Date = "Date";
     private static final String TAG_Time="Time";
     private static final String TAG_Cost="Cost";
-
-
-    public void getData(String url) {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
-
-            @Override
-            protected String doInBackground(String... params) {
-
-                String uri = params[0];
-
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(uri);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
-
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-
-                    String json;
-                    while ((json = bufferedReader.readLine()) != null) {
-                        sb.append(json + "\n");
-                    }
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-
-            @Override
-            public void onPostExecute(String result) {
-                myJSON1 = result;
-                showList();
-            }
-        }
-        GetDataJSON g = new GetDataJSON();
-        g.execute(url);
-    }
 
     public void showList() {
         try {
