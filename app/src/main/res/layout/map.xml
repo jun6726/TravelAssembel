@@ -32,10 +32,10 @@
                 android:focusableInTouchMode="true"
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
-                android:maxLines="1"
                 android:padding="16dp"
                 android:scrollHorizontally="true"
-                android:text="Current Marker Address" />
+                android:text="Current Marker Address"
+                android:singleLine="true" />
 
         </RelativeLayout>
 
