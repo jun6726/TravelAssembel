@@ -7,6 +7,39 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <android.support.v7.widget.CardView
+        android:id="@+id/cardView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        card_view:cardCornerRadius="0dp"
+        card_view:cardElevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/txtLocationAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:padding="16dp"
+                android:scrollHorizontally="true"
+                android:singleLine="true"
+                android:text="Current Marker Address" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+
     <fragment xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:map="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
@@ -14,13 +47,11 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="510dp"
-        android:layout_weight="1"
         tools:context=".MapsActivity" />
 
     <ListView
         android:id="@+id/listVIew"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="10" />
+        android:layout_height="match_parent" />
 
 </LinearLayout>

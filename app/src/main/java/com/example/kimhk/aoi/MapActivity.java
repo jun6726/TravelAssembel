@@ -60,7 +60,7 @@ import java.util.Map;
  * Created by kimhk on 2019-01-20.
  */
 
-public class MapActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class MapActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
     private static final String FINE_LOCATION = android.Manifest.permission.ACCESS_FINE_LOCATION;
     private static final String COURSE_LOCATION = android.Manifest.permission.ACCESS_COARSE_LOCATION;
     private static final int LOCATION_PERMISSION_REQUEST_CODE = 1234;
@@ -127,6 +127,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         });
         initCameraIdle();//카메라 함수
+        mMap.setOnMarkerClickListener(this);
     }
     
     // Marking lat. long. on the GoogleMaps
@@ -188,6 +189,9 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 marker.remove();
+
+                //info DB 삭제
+                deleteLatLng("http://jun6726.cafe24.com/marker_delete.php");
             }
         });
 
@@ -201,6 +205,31 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         dlg.show();
         return true;
     }
+    public void deleteLatLng(String url) {
+        class GetDataJSON extends AsyncTask<String, Void, String> {
+            @Override
+            protected String doInBackground(String... params) {
+                String uri = params[0];
+                BufferedReader bufferedReader = null;
+                try {
+                    URL url = new URL(uri);
+                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
+                    StringBuilder sb = new StringBuilder();
+                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                    String json;
+                    while ((json = bufferedReader.readLine()) != null) {
+                        sb.append(json + "\n");
+                    }
+                    return sb.toString().trim();
+                } catch (Exception e) {
+                    return null;
+                }
+            }
+        }
+        GetDataJSON getDataJSON = new GetDataJSON();
+        getDataJSON.execute(url);
+    }
+
 
     //카메라 함수
     private void initCameraIdle() {

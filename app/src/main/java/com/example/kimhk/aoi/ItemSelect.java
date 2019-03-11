@@ -72,7 +72,7 @@ import java.util.Map;
  * Created by YEON on 2019-02-02.
  */
 
-public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback {
+public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback , GoogleMap.OnMarkerClickListener{
 
     private GoogleMap select_map;
     public String getData_position;
@@ -444,12 +444,12 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
                 Array_list.add(persons);
             }
 
-            ListAdapter adapter = new SimpleAdapter(
-                    ItemSelect.this, Array_list, R.layout.list_item,
-                    new String[]{TAG_ID, TAG_Date, TAG_Time, TAG_Cost},
-                    new int[]{R.id.ID, R.id.Date, R.id.Time, R.id.Cost}
-            );
-            listView.setAdapter(adapter);
+//            ListAdapter adapter = new SimpleAdapter(
+//                    ItemSelect.this, Array_list, R.layout.list_item,
+//                    new String[]{TAG_ID, TAG_Date, TAG_Time, TAG_Cost},
+//                    new int[]{R.id.ID, R.id.Date, R.id.Time, R.id.Cost}
+//            );
+//            listView.setAdapter(adapter);
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -23,7 +23,7 @@ import java.security.NoSuchAlgorithmException;
 
 import static com.kakao.util.helper.Utility.getPackageInfo;
 
-public class App extends Application {
+    public class App extends Application {
 
     private class KakaoSDKAdapter extends KakaoAdapter {
 
