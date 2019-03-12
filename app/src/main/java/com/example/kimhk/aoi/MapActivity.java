@@ -148,7 +148,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         protected Void doInBackground(LatLng... params) {
             String lat = Double.toString(params[0].latitude);
             String lon = Double.toString(params[0].longitude);
-            String strUrl = "http://jun6726.cafe24.com/info.php";
+            String strUrl = "http://jun6726.cafe24.com/php_folder/info.php";
             URL url = null;
             try {
                 url = new URL(strUrl);
@@ -191,7 +191,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 marker.remove();
 
                 //info DB 삭제
-                deleteLatLng("http://jun6726.cafe24.com/marker_delete.php");
+                deleteLatLng("http://jun6726.cafe24.com/php_folder/marker_delete.php");
             }
         });
 

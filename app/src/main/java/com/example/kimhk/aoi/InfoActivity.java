@@ -125,7 +125,7 @@ public class InfoActivity extends AppCompatActivity {
                 String Time = ev_Time.getText().toString();
                 String Cost = ev_Cost.getText().toString();
 
-                send.execute("http://jun6726.cafe24.com/Time_send.php", Date, Time, Cost);
+                send.execute("http://jun6726.cafe24.com/php_folder/Time_send.php", Date, Time, Cost);
                 Toast.makeText(InfoActivity.this, "제출", Toast.LENGTH_SHORT).show();
 
                 Mypage.Map_intent = new Intent();

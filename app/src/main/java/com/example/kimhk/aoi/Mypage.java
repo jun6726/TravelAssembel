@@ -67,7 +67,7 @@ public class Mypage extends Activity {
 
         Travel_List = (ListView) findViewById(R.id.Travel_List);
         Travel_Array_list = new ArrayList<HashMap<String, String>>();
-        getData("http://jun6726.cafe24.com/select_TravelList.php"); //수정 필요
+        getData("http://jun6726.cafe24.com/php_folder/select_TravelList.php"); //수정 필요
     }
 
     public void getData(String url) {

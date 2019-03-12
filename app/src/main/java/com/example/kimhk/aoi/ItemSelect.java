@@ -113,7 +113,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 
         Position_send position_send = new Position_send();
 
-        position_send.execute("http://jun6726.cafe24.com/Item_select.php", getData_position);
+        position_send.execute("http://jun6726.cafe24.com/php_folder/Item_select.php", getData_position);
 
         txtLocationAddress = findViewById(R.id.txtLocationAddress);
         txtLocationAddress.setEllipsize(TextUtils.TruncateAt.MARQUEE);
@@ -177,7 +177,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         protected Void doInBackground(LatLng... params) {
             String lat = Double.toString(params[0].latitude);
             String lon = Double.toString(params[0].longitude);
-            String strUrl = "http://jun6726.cafe24.com/info.php";
+            String strUrl = "http://jun6726.cafe24.com/php_folder/info.php";
             URL url = null;
             try {
                 url = new URL(strUrl);

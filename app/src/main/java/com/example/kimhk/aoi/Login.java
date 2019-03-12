@@ -99,7 +99,7 @@ public class Login extends AppCompatActivity {
                 if (Session.getCurrentSession().isOpened()) {
 
                     username_send username_send = new username_send();
-                    username_send.execute("http://jun6726.cafe24.com/username_test.php",nickname, String.valueOf(Id));
+                    username_send.execute("http://jun6726.cafe24.com/php_folder/username_test.php",nickname, String.valueOf(Id));
                     Log.d("닉네임",nickname);
                     requestLogout();
                 }
