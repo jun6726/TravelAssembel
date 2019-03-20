@@ -12,9 +12,6 @@
 
 
     <LinearLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context="com.example.junma.all_in_one.Kakao"
@@ -73,6 +70,7 @@
             android:id="@+id/com_kakao_login"
             android:layout_width="300dp"
             android:layout_height="70dp"/>
+
         <Button
             android:id="@+id/mypage"
             android:textColor="#fff"

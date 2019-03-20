@@ -39,7 +39,7 @@ public class Mypage extends Activity {
     private static final String TAG_LOCATION="location";
     private static final String TAG_TRAVEL_PROGRESS="travel_progress";
 
-    public static Intent Map_intent, Item_select_intent;
+    public static Intent Map_intent, Item_select_intent, add_travel_intent;
 
     JSONArray Travels = null;
     ArrayList<HashMap<String, String>> Travel_Array_list;
@@ -55,13 +55,16 @@ public class Mypage extends Activity {
         btn_date = (Button) findViewById(R.id.btn_date);
         btn_remove = (Button) findViewById(R.id.btn_remove);
 
+//        Intent get_intent = getIntent();
+//      Long get1_user_Id = get_intent.getExtras().getLong("user_Id");
+
+//        Toast.makeText(this, "아이디 : " + get1_user_Id, Toast.LENGTH_SHORT).show();
+
         btn_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
-                Map_intent = new Intent(getApplicationContext(), MapActivity.class);
-                startActivity(Map_intent);
+                add_travel_intent = new Intent(getApplicationContext(), AddTravelList.class);
+                startActivity(add_travel_intent);
             }
         });
 

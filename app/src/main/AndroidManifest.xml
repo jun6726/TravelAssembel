@@ -23,7 +23,7 @@
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".Login">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -34,14 +34,16 @@
         <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
-        <activity android:name=".Login" />
         <activity android:name=".Mypage"
             android:parentActivityName=".Login"/>
+        <activity android:name=".AddTravelList"
+            android:parentActivityName=".Mypage"/>
         <activity android:name=".MapActivity" />
         <activity android:name=".ItemSelect" android:parentActivityName=".Mypage"/>
         <activity
             android:name=".InfoActivity"
             android:parentActivityName=".MapActivity" />
+
     </application>
 
 </manifest>

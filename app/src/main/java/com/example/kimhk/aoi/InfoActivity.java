@@ -129,8 +129,6 @@ public class InfoActivity extends AppCompatActivity {
                 Toast.makeText(InfoActivity.this, "제출", Toast.LENGTH_SHORT).show();
 
                 Mypage.Map_intent = new Intent();
-                Mypage.Map_intent.putExtra("put_lat","12.0000");
-                Mypage.Map_intent.putExtra("put_long", "34.231312");
                 setResult(3000,Mypage.Map_intent);
                 finish();
             }
