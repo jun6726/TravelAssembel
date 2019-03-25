@@ -1,6 +1,5 @@
 package com.example.kimhk.aoi;
 
-import android.*;
 import android.Manifest;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,20 +7,16 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,22 +34,13 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 /**
  * Created by kimhk on 2019-01-20.
@@ -80,6 +66,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     LatLng center;
     CardView cardView;
     TextView txtLocationAddress;
+    ListView plan_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +78,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         txtLocationAddress.setMarqueeRepeatLimit(-1);
         txtLocationAddress.setSelected(true);
         cardView = findViewById(R.id.cardView);
+        plan_list = findViewById(R.id.plan_list);
 
         //카드뷰
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -120,9 +108,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onMapClick(LatLng latLng) {
                 addMarker(latLng);
-                sendToServer(latLng);
 
-                Info_Intent = new Intent(getApplicationContext(), InfoActivity.class);
+                Info_Intent = new Intent(getApplicationContext(), AddMarker.class);
+                Info_Intent.putExtra("Lat",latLng.latitude);
+                Info_Intent.putExtra("Lng",latLng.longitude);
                 startActivity(Info_Intent);
             }
         });
@@ -137,51 +126,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.addMarker(markerOptions);
     }
 
-    // Enjoining bg thread to save marker inMySQL server
-    private void sendToServer(LatLng latlng) {
-        new SaveTask().execute(latlng);
-    }
-
-    // bg thread to save the marker in MySQL server
-    private class SaveTask extends AsyncTask<LatLng, Void, Void> {
-        @Override
-        protected Void doInBackground(LatLng... params) {
-            String lat = Double.toString(params[0].latitude);
-            String lon = Double.toString(params[0].longitude);
-            String strUrl = "http://jun6726.cafe24.com/php_folder/info.php";
-            URL url = null;
-            try {
-                url = new URL(strUrl);
-
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("POST");
-                connection.setDoOutput(true);
-                OutputStreamWriter outputStreamWriter = new OutputStreamWriter(connection.getOutputStream());
-
-                outputStreamWriter.write("lat=" + lat + "&lon=" + lon);
-                outputStreamWriter.flush();
-                outputStreamWriter.close();
-
-                InputStream iStream = connection.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(iStream));
-
-                StringBuffer sb = new StringBuffer();
-
-                String line = "";
-
-                while ((line = reader.readLine()) != null) {
-                    sb.append(line);
-                }
-                reader.close();
-                iStream.close();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
-    }
     public boolean onMarkerClick(final Marker marker) {
         AlertDialog.Builder dlg = new AlertDialog.Builder(MapActivity.this);
         dlg.setTitle("마커 위치");
@@ -189,47 +133,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 marker.remove();
-
-                //info DB 삭제
-                deleteLatLng("http://jun6726.cafe24.com/php_folder/marker_delete.php");
-            }
-        });
-
-        dlg.setPositiveButton("일정 추가", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent_test = new Intent(getApplication(), InfoActivity.class);
-                startActivity(intent_test);
             }
         });
         dlg.show();
         return true;
     }
-    public void deleteLatLng(String url) {
-        class GetDataJSON extends AsyncTask<String, Void, String> {
-            @Override
-            protected String doInBackground(String... params) {
-                String uri = params[0];
-                BufferedReader bufferedReader = null;
-                try {
-                    URL url = new URL(uri);
-                    HttpURLConnection con = (HttpURLConnection) url.openConnection();
-                    StringBuilder sb = new StringBuilder();
-                    bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                    String json;
-                    while ((json = bufferedReader.readLine()) != null) {
-                        sb.append(json + "\n");
-                    }
-                    return sb.toString().trim();
-                } catch (Exception e) {
-                    return null;
-                }
-            }
-        }
-        GetDataJSON getDataJSON = new GetDataJSON();
-        getDataJSON.execute(url);
-    }
-
 
     //카메라 함수
     private void initCameraIdle() {
@@ -284,7 +192,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 } else {
                     txtLocationAddress.setText(place.getAddress());
                 }
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 16);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 32);
                 mMap.animateCamera(cameraUpdate);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             }}

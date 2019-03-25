@@ -54,17 +54,18 @@ public class Mypage extends Activity {
 
         btn_date = (Button) findViewById(R.id.btn_date);
         btn_remove = (Button) findViewById(R.id.btn_remove);
-
-//        Intent get_intent = getIntent();
-//      Long get1_user_Id = get_intent.getExtras().getLong("user_Id");
-
-//        Toast.makeText(this, "아이디 : " + get1_user_Id, Toast.LENGTH_SHORT).show();
-
         btn_date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 add_travel_intent = new Intent(getApplicationContext(), AddTravelList.class);
                 startActivity(add_travel_intent);
+            }
+        });
+
+        btn_remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getData("http://jun6726.cafe24.com/php_folder/marker_delete.php");
             }
         });
 

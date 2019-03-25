@@ -1,7 +1,5 @@
 package com.example.kimhk.aoi;
 
-import android.*;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,11 +18,7 @@ import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -55,17 +49,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 
 /**
@@ -152,7 +143,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
                 addMarker(latLng);
                 sendToServer(latLng);
 
-                Info_Intent = new Intent(getApplicationContext(), InfoActivity.class);
+                Info_Intent = new Intent(getApplicationContext(), AddMarker.class);
                 startActivity(Info_Intent);
             }
         });
@@ -224,7 +215,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         dlg.setPositiveButton("일정 추가", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent_test = new Intent(getApplication(), InfoActivity.class);
+                Intent intent_test = new Intent(getApplication(), AddMarker.class);
                 startActivity(intent_test);
             }
         });

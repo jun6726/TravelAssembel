@@ -41,7 +41,7 @@
         <activity android:name=".MapActivity" />
         <activity android:name=".ItemSelect" android:parentActivityName=".Mypage"/>
         <activity
-            android:name=".InfoActivity"
+            android:name=".AddMarker"
             android:parentActivityName=".MapActivity" />
 
     </application>

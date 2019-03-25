@@ -1,7 +1,5 @@
 package com.example.kimhk.aoi;
 
-import android.app.AlertDialog;
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -10,26 +8,12 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.ResponseHandler;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.utils.URLEncodedUtils;
-import org.apache.http.impl.client.BasicResponseHandler;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.protocol.HTTP;
+import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -40,28 +24,26 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.text.DateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 /**
  * Created by kimhk on 2019-01-09.
  */
 
-public class InfoActivity extends AppCompatActivity {
+public class AddMarker extends AppCompatActivity {
 
     TextView tv_Date,tv_Time, tv_Cost;
     EditText ev_Date, ev_Time, ev_Cost;
     Button btn_Cancle, btn_Submit;
     Calendar cal = Calendar.getInstance();
 
+    Intent get_latlng;
+    Double lat,lng;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info);
+        setContentView(R.layout.add_marker);
 
         tv_Date = (TextView) findViewById(R.id.tv_Date);
         ev_Date = (EditText) findViewById(R.id.ev_Date);
@@ -79,29 +61,34 @@ public class InfoActivity extends AppCompatActivity {
         btn_Cancle = (Button) findViewById(R.id.btn_Cancle);
         btn_Submit = (Button) findViewById(R.id.btn_Submit);
 
+        get_latlng = getIntent();
+        lat = get_latlng.getDoubleExtra("Lat", 0);
+        lng = get_latlng.getDoubleExtra("Lng", 0);
+
         ev_Date.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final DatePickerDialog datePickerDialog = new DatePickerDialog(InfoActivity.this, new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                        String Date_string = String.format("%d년 %d월 %d일", year, month+1, day);
-                        ev_Date.setText(Date_string);
-                    }
-                }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH));
-                datePickerDialog.show();
+                SmoothDateRangePickerFragment smoothDateRangePickerFragment =
+                        SmoothDateRangePickerFragment.newInstance(new SmoothDateRangePickerFragment.OnDateRangeSetListener() {
+                            @Override
+                            public void onDateRangeSet(SmoothDateRangePickerFragment view, int yearStart, int monthStart, int dayStart,
+                                            int yearEnd, int monthEnd, int dayEnd) {
+                                String date = yearStart + "/" + (++monthStart) + "/" + dayStart + " ~ " + yearEnd + "/" + (++monthEnd) + "/" + dayEnd;
+                                ev_Date.setText(date);
+                            }
+                        });
+                smoothDateRangePickerFragment.show(getFragmentManager(), "Datepickerdialog");
             }
         });
-
 
         ev_Time.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final TimePickerDialog TimePicker = new TimePickerDialog(InfoActivity.this, new TimePickerDialog.OnTimeSetListener() {
+                final TimePickerDialog TimePicker = new TimePickerDialog(AddMarker.this, new TimePickerDialog.OnTimeSetListener() {
                     @Override
                     public void onTimeSet(TimePicker timePicker, int hour, int min) {
                         String time_string = String.format("%d시 %d분", hour, min);
-                        Toast.makeText(InfoActivity.this, time_string, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddMarker.this, time_string, Toast.LENGTH_SHORT).show();
                         ev_Time.setText(time_string);
                     }
                 }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
@@ -112,6 +99,8 @@ public class InfoActivity extends AppCompatActivity {
         btn_Cancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                MapActivity mapActivity = new MapActivity();
+                mapActivity.marker.remove();
                 finish();
             }
         });
@@ -125,8 +114,12 @@ public class InfoActivity extends AppCompatActivity {
                 String Time = ev_Time.getText().toString();
                 String Cost = ev_Cost.getText().toString();
 
-                send.execute("http://jun6726.cafe24.com/php_folder/Time_send.php", Date, Time, Cost);
-                Toast.makeText(InfoActivity.this, "제출", Toast.LENGTH_SHORT).show();
+                String str_lat = String.valueOf(lat);
+                String str_lng = String.valueOf(lng);
+
+                send.execute("http://jun6726.cafe24.com/php_folder/Data_send.php", Date, Time, Cost, str_lat,str_lng);
+
+                Toast.makeText(AddMarker.this, "제출", Toast.LENGTH_SHORT).show();
 
                 Mypage.Map_intent = new Intent();
                 setResult(3000,Mypage.Map_intent);
@@ -143,7 +136,10 @@ public class InfoActivity extends AppCompatActivity {
             String Date = (String)params[1];
             String Time = (String)params[2];
             String Cost = (String)params[3];
-            String postParameters = "&Date=" + Date + "&Time=" + Time + "&Cost=" + Cost;
+            String Lat = (String)params[4];
+            String Lng = (String)params[5];
+
+            String postParameters = "&Date=" + Date + "&Time=" + Time + "&Cost=" + Cost + "&Lat=" + Lat +"&Lng=" + Lng;
 
             try{
                 URL url = new URL(serverURL);
@@ -172,9 +168,7 @@ public class InfoActivity extends AppCompatActivity {
                     sb.append(line);
                 }
                 bufferedReader.close();
-
                 return sb.toString();
-
 
             }catch (ProtocolException e) {
                 e.printStackTrace();
