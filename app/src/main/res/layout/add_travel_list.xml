@@ -80,19 +80,24 @@
         android:text="AirCalendar"
         android:textSize="35sp" />
 
-    <com.savvi.rangedatepicker.CalendarPickerView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/calendar_view"
-        android:layout_width="match_parent"
+    <!--<CalendarView-->
+        <!--android:id="@+id/calendarView"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@+id/tv_calendar"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_marginTop="1dp"-->
+        <!--android:layout_marginEnd="0dp" />-->
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/tv_calendar"
-        android:layout_marginTop="30dp"
-        android:clipToPadding="false"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingBottom="16dp"
-        android:scrollbarStyle="outsideOverlay"
-        app:tsquare_dividerColor="@color/transparent"
-        app:tsquare_headerTextColor="@color/custom_header_text" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="326dp"
+        android:layout_marginEnd="164dp"
+        android:text="TextView"
+        android:textSize="36sp" />
 
 </RelativeLayout>

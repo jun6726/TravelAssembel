@@ -143,6 +143,7 @@ public class Mypage extends Activity {
                     startActivity(Item_select_intent);
                 }
             });
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
