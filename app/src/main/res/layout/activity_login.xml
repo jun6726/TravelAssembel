@@ -73,11 +73,11 @@
 
         <Button
             android:id="@+id/mypage"
-            android:textColor="#fff"
-            android:text="마이페이지"
-            android:textStyle="bold"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"/>
+            android:layout_height="62dp"
+            android:text="마이페이지"
+            android:textColor="#fff"
+            android:textStyle="bold" />
 
 
     </LinearLayout>

@@ -13,9 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.kakao.usermgmt.UserManagement;
-import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,23 +25,19 @@ import java.net.URL;
 import static com.kakao.usermgmt.StringSet.nickname;
 
 public class AddTravelList extends AppCompatActivity {
-    TextView tv, tv_calendar,tv_date;
+    TextView tv;
     EditText travel_location;
     Button btn_Cancle2, btn_Submit2;
     TravelList_send travelList_send;
-    CalendarView calendarView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_travel_list);
 
         tv = (TextView) findViewById(R.id.tv);
-        tv_calendar = (TextView) findViewById(R.id.tv_calendar);
         travel_location = (EditText) findViewById(R.id.travel_location);
         btn_Cancle2 = (Button) findViewById(R.id.btn_Cancle2);
         btn_Submit2 = (Button) findViewById(R.id.btn_Submit2);
-//        calendarView = (CalendarView) findViewById(R.id.calendarView);
-        tv_date = (TextView) findViewById(R.id.tv_date);
 
         btn_Cancle2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,7 +51,7 @@ public class AddTravelList extends AppCompatActivity {
             public void onClick(View view) {
                 String add_location = travel_location.getText().toString();
                 travelList_send = new TravelList_send();
-                travelList_send.execute("http://jun6726.cafe24.com/php_folder/TravelList_send.php", "1",add_location);
+                travelList_send.execute("http://jun6726.cafe24.com/php_folder/TravelList_send.php", "1023930",add_location);
                 Toast.makeText(AddTravelList.this, "제출 : ", Toast.LENGTH_SHORT).show();
 
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
@@ -100,10 +93,7 @@ public class AddTravelList extends AppCompatActivity {
                     sb.append(line);
                 }
                 bufferedReader.close();
-
                 return sb.toString();
-
-
             }catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -113,5 +103,4 @@ public class AddTravelList extends AppCompatActivity {
             return null;
         }
     }
-
 }

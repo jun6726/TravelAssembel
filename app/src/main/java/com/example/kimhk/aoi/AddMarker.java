@@ -32,7 +32,11 @@ import java.util.Calendar;
 
 public class AddMarker extends AppCompatActivity {
 
-    TextView tv_Date,tv_Time, tv_Cost;
+    TextView tv_Date;
+    TextView tv_Time;
+    TextView tv_Cost;
+    TextView tv1;
+    TextView tv2;
     EditText ev_Date, ev_Time, ev_Cost;
     Button btn_Cancle, btn_Submit;
     Calendar cal = Calendar.getInstance();
@@ -44,6 +48,9 @@ public class AddMarker extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_marker);
+
+        tv1 = (TextView) findViewById(R.id.tv1);
+        tv2 = (TextView) findViewById(R.id.tv2);
 
         tv_Date = (TextView) findViewById(R.id.tv_Date);
         ev_Date = (EditText) findViewById(R.id.ev_Date);
@@ -64,6 +71,11 @@ public class AddMarker extends AppCompatActivity {
         get_latlng = getIntent();
         lat = get_latlng.getDoubleExtra("Lat", 0);
         lng = get_latlng.getDoubleExtra("Lng", 0);
+        String str_lat = String.valueOf(lat);
+        String str_lng = String.valueOf(lng);
+
+        tv1.setText(str_lat);
+        tv2.setText(str_lng);
 
         ev_Date.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,8 +126,8 @@ public class AddMarker extends AppCompatActivity {
                 String Time = ev_Time.getText().toString();
                 String Cost = ev_Cost.getText().toString();
 
-                String str_lat = String.valueOf(lat);
-                String str_lng = String.valueOf(lng);
+                String str_lat = tv1.getText().toString();
+                String str_lng = tv2.getText().toString();
 
                 send.execute("http://jun6726.cafe24.com/php_folder/Data_send.php", Date, Time, Cost, str_lat,str_lng);
 

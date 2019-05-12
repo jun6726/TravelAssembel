@@ -84,6 +84,22 @@
             android:background="@drawable/cast_abc_scrubber_control_to_pressed_mtrl_005"
             android:backgroundTint="#009950"
             android:textAlignment="textEnd" />
+
+        <TextView
+            android:id="@+id/tv1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="261dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/tv2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="207dp"
+            android:text="TextView" />
     </RelativeLayout>
 
 </LinearLayout>

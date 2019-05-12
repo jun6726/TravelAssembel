@@ -20,6 +20,15 @@
             android:paddingTop="5dp">
 
             <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="유저 식별값"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/ID"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -30,6 +39,15 @@
                 android:textSize="14sp"
                 tools:layout_editor_absoluteX="75dp"
                 tools:layout_editor_absoluteY="84dp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="여행 번호"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/Travel_no"
@@ -44,6 +62,36 @@
                 tools:layout_editor_absoluteY="84dp" />
 
             <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="여행기간"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/Travel_progress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingLeft="20dp"
+                android:paddingBottom="5dp"
+                android:text="TextView"
+                android:textSize="14sp"
+                tools:layout_editor_absoluteX="75dp"
+                tools:layout_editor_absoluteY="84dp" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="여행 나라"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
                 android:id="@+id/Term"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -56,19 +104,16 @@
                 tools:layout_editor_absoluteY="84dp" />
 
             <TextView
-                android:id="@+id/Location"
+                android:id="@+id/textView5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:paddingLeft="20dp"
-                android:paddingBottom="5dp"
-                android:text="TextView"
-                android:textSize="14sp"
-                tools:layout_editor_absoluteX="75dp"
-                tools:layout_editor_absoluteY="84dp" />
+                android:text="여행 진행여부"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/Travel_progress"
+                android:id="@+id/Location"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

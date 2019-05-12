@@ -57,6 +57,8 @@ public class Login extends AppCompatActivity {
     public static Login mrequestLogout; // 메인에서 로그아웃 함수 불러주기 위한 변수
     AQuery aQuery;
 
+    Intent mypage_intent;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +69,14 @@ public class Login extends AppCompatActivity {
         aQuery = new AQuery(this);
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
+
+        mypage_intent = new Intent(getApplicationContext(), Mypage.class);
+        mypage.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                startActivity(mypage_intent);
+            }
+        });
 
         // 카카오톡 로그인 버튼
         loginButton = (LoginButton) findViewById(R.id.com_kakao_login);
@@ -192,7 +202,7 @@ public class Login extends AppCompatActivity {
                 Log.e("onNotSignedUp", "onNotSignedUp");
             }
         });
-        Intent mypage_intent = new Intent(getApplicationContext(), Mypage.class);
+
         startActivity(mypage_intent);
 
     }

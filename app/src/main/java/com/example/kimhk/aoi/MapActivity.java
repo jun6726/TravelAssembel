@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -67,6 +68,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     CardView cardView;
     TextView txtLocationAddress;
     ListView plan_list;
+    Button btn_marker_cancle, btn_marker_complete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +80,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         txtLocationAddress.setMarqueeRepeatLimit(-1);
         txtLocationAddress.setSelected(true);
         cardView = findViewById(R.id.cardView);
+        btn_marker_cancle = findViewById(R.id.btn_marker_cancle);
+        btn_marker_complete = findViewById(R.id.btn_marker_complete);
         plan_list = findViewById(R.id.plan_list);
 
         //카드뷰
@@ -97,6 +101,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         getLocationPermission();
+
+        btn_marker_cancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        btn_marker_complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
     }
 
     @Override
@@ -109,6 +127,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             public void onMapClick(LatLng latLng) {
                 addMarker(latLng);
 
+                Toast.makeText(MapActivity.this, "래티튜드"+latLng.latitude, Toast.LENGTH_SHORT).show();
                 Info_Intent = new Intent(getApplicationContext(), AddMarker.class);
                 Info_Intent.putExtra("Lat",latLng.latitude);
                 Info_Intent.putExtra("Lng",latLng.longitude);

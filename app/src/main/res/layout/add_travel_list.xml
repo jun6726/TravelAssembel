@@ -7,17 +7,6 @@
     android:orientation="vertical">
 
 
-    <Switch
-        android:id="@+id/switch1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp"
-        android:layout_marginEnd="40dp"
-        android:text="여행 진행 여부"
-        android:textSize="12sp" />
-
     <TextView
         android:id="@+id/tv"
         android:layout_width="wrap_content"
@@ -49,9 +38,9 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="40dp"
-        android:layout_marginTop="650dp"
+        android:layout_marginBottom="40dp"
         android:background="@drawable/cast_abc_scrubber_control_to_pressed_mtrl_000"
         android:backgroundTint="@color/colorAccent" />
 
@@ -59,26 +48,14 @@
         android:id="@+id/btn_Submit2"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="650dp"
-        android:layout_marginEnd="40dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="629dp"
+        android:layout_marginEnd="39dp"
+        android:layout_marginBottom="42dp"
         android:background="@drawable/cast_abc_scrubber_control_to_pressed_mtrl_005"
         android:backgroundTint="#009950"
         android:textAlignment="textEnd" />
-
-    <TextView
-        android:id="@+id/tv_calendar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/travel_location"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginStart="40dp"
-        android:layout_marginTop="45dp"
-        android:layout_marginEnd="112dp"
-        android:text="AirCalendar"
-        android:textSize="35sp" />
 
     <!--<CalendarView-->
         <!--android:id="@+id/calendarView"-->
@@ -88,16 +65,5 @@
         <!--android:layout_alignParentEnd="true"-->
         <!--android:layout_marginTop="1dp"-->
         <!--android:layout_marginEnd="0dp" />-->
-
-    <TextView
-        android:id="@+id/tv_date"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_calendar"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="326dp"
-        android:layout_marginEnd="164dp"
-        android:text="TextView"
-        android:textSize="36sp" />
 
 </RelativeLayout>

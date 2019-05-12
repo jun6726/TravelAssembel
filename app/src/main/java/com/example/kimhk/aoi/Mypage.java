@@ -105,32 +105,32 @@ public class Mypage extends Activity {
     }
 
     public void showList() {
-        try {
-            JSONObject jsonObj = new JSONObject(myJSON);
-            Travels = jsonObj.getJSONArray(TAG_RESULTS);
+                try {
+                    JSONObject jsonObj = new JSONObject(myJSON);
+                    Travels = jsonObj.getJSONArray(TAG_RESULTS);
 
-            for (int i = 0; i < Travels.length(); i++) {
-                JSONObject c = Travels.getJSONObject(i);
+                    for (int i = 0; i < Travels.length(); i++) {
+                        JSONObject c = Travels.getJSONObject(i);
 
-                String user_id = c.getString(TAG_ID);
-                String travel_number = c.getString(TAG_TRAVEL_NUMBER);
-                String term = c.getString(TAG_TERM);
-                String location = c.getString(TAG_LOCATION);
-                String travel_progress = c.getString(TAG_TRAVEL_PROGRESS);
+                        String user_id = c.getString(TAG_ID);
+                        String travel_number = c.getString(TAG_TRAVEL_NUMBER);
+                        String term = c.getString(TAG_TERM);
+                        String location = c.getString(TAG_LOCATION);
+                        String travel_progress = c.getString(TAG_TRAVEL_PROGRESS);
 
-                HashMap<String, String> persons = new HashMap<String, String>();
+                        HashMap<String, String> persons = new HashMap<String, String>();
 
-                persons.put(TAG_ID, user_id);
-                persons.put(TAG_TRAVEL_NUMBER, travel_number);
-                persons.put(TAG_TERM, term);
-                persons.put(TAG_LOCATION, location);
-                persons.put(TAG_TRAVEL_PROGRESS,travel_progress);
+                        persons.put(TAG_ID, user_id);
+                        persons.put(TAG_TRAVEL_NUMBER, travel_number);
+                        persons.put(TAG_TERM, term);
+                        persons.put(TAG_LOCATION, location);
+                        persons.put(TAG_TRAVEL_PROGRESS,travel_progress);
 
-                Travel_Array_list.add(persons);
-            }
-            ListAdapter adapter = new SimpleAdapter(
-                    Mypage.this, Travel_Array_list, R.layout.list_item,
-                    new String[]{TAG_ID, TAG_TRAVEL_NUMBER, TAG_TERM, TAG_LOCATION ,TAG_TRAVEL_PROGRESS},
+                        Travel_Array_list.add(persons);
+                    }
+                    ListAdapter adapter = new SimpleAdapter(
+                            Mypage.this, Travel_Array_list, R.layout.list_item,
+                            new String[]{TAG_ID, TAG_TRAVEL_NUMBER, TAG_TERM, TAG_LOCATION ,TAG_TRAVEL_PROGRESS},
                     new int[]{R.id.ID, R.id.Travel_no, R.id.Term, R.id.Location, R.id.Travel_progress}
             );
             Travel_List.setAdapter(adapter);
