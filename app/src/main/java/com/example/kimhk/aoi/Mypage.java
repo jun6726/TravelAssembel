@@ -1,8 +1,6 @@
 package com.example.kimhk.aoi;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -12,7 +10,6 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -21,7 +18,6 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.IDN;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,20 +37,20 @@ public class Mypage extends Activity {
 
     public static Intent Map_intent, Item_select_intent, add_travel_intent;
 
-    JSONArray Travels = null;
-    ArrayList<HashMap<String, String>> Travel_Array_list;
+    JSONArray trasvels = null;
+    ArrayList<HashMap<String, String>> travelArrayList;
 
-    ListView Travel_List;
-    Button btn_date,btn_remove;
+    ListView travelList;
+    Button btnDate, btnRemove;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
 
-        btn_date = (Button) findViewById(R.id.btn_date);
-        btn_remove = (Button) findViewById(R.id.btn_remove);
-        btn_date.setOnClickListener(new View.OnClickListener() {
+        btnDate = (Button) findViewById(R.id.btn_date);
+        btnRemove = (Button) findViewById(R.id.btn_remove);
+        btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 add_travel_intent = new Intent(getApplicationContext(), AddTravelList.class);
@@ -62,15 +58,15 @@ public class Mypage extends Activity {
             }
         });
 
-        btn_remove.setOnClickListener(new View.OnClickListener() {
+        btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 getData("http://jun6726.cafe24.com/php_folder/marker_delete.php");
             }
         });
 
-        Travel_List = (ListView) findViewById(R.id.Travel_List);
-        Travel_Array_list = new ArrayList<HashMap<String, String>>();
+        travelList = (ListView) findViewById(R.id.Travel_List);
+        travelArrayList = new ArrayList<HashMap<String, String>>();
         getData("http://jun6726.cafe24.com/php_folder/select_TravelList.php"); //수정 필요
     }
 
@@ -107,10 +103,10 @@ public class Mypage extends Activity {
     public void showList() {
                 try {
                     JSONObject jsonObj = new JSONObject(myJSON);
-                    Travels = jsonObj.getJSONArray(TAG_RESULTS);
+                    trasvels = jsonObj.getJSONArray(TAG_RESULTS);
 
-                    for (int i = 0; i < Travels.length(); i++) {
-                        JSONObject c = Travels.getJSONObject(i);
+                    for (int i = 0; i < trasvels.length(); i++) {
+                        JSONObject c = trasvels.getJSONObject(i);
 
                         String user_id = c.getString(TAG_ID);
                         String travel_number = c.getString(TAG_TRAVEL_NUMBER);
@@ -126,20 +122,20 @@ public class Mypage extends Activity {
                         persons.put(TAG_LOCATION, location);
                         persons.put(TAG_TRAVEL_PROGRESS,travel_progress);
 
-                        Travel_Array_list.add(persons);
+                        travelArrayList.add(persons);
                     }
                     ListAdapter adapter = new SimpleAdapter(
-                            Mypage.this, Travel_Array_list, R.layout.list_item,
+                            Mypage.this, travelArrayList, R.layout.list_item,
                             new String[]{TAG_ID, TAG_TRAVEL_NUMBER, TAG_TERM, TAG_LOCATION ,TAG_TRAVEL_PROGRESS},
                     new int[]{R.id.ID, R.id.Travel_no, R.id.Term, R.id.Location, R.id.Travel_progress}
             );
-            Travel_List.setAdapter(adapter);
+            travelList.setAdapter(adapter);
 
-            Travel_List.setOnItemClickListener(new ListView.OnItemClickListener() {
+            travelList.setOnItemClickListener(new ListView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     Item_select_intent = new Intent(getApplicationContext(), ItemSelect.class);
-                    Item_select_intent.putExtra("position",Travel_Array_list.get(position).get(TAG_ID));
+                    Item_select_intent.putExtra("position", travelArrayList.get(position).get(TAG_ID));
                     startActivity(Item_select_intent);
                 }
             });

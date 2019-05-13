@@ -32,16 +32,16 @@ import java.util.Calendar;
 
 public class AddMarker extends AppCompatActivity {
 
-    TextView tv_Date;
-    TextView tv_Time;
-    TextView tv_Cost;
+    TextView tvDate;
+    TextView tvTime;
+    TextView tvCost;
     TextView tv1;
     TextView tv2;
-    EditText ev_Date, ev_Time, ev_Cost;
-    Button btn_Cancle, btn_Submit;
+    EditText evDate, evTime, evCost;
+    Button btnCancle, btnSubmit;
     Calendar cal = Calendar.getInstance();
 
-    Intent get_latlng;
+    Intent getLatLng;
     Double lat,lng;
 
     @Override
@@ -52,32 +52,32 @@ public class AddMarker extends AppCompatActivity {
         tv1 = (TextView) findViewById(R.id.tv1);
         tv2 = (TextView) findViewById(R.id.tv2);
 
-        tv_Date = (TextView) findViewById(R.id.tv_Date);
-        ev_Date = (EditText) findViewById(R.id.ev_Date);
-        ev_Date.setFocusable(false);
-        ev_Date.setClickable(false);
+        tvDate = (TextView) findViewById(R.id.tv_Date);
+        evDate = (EditText) findViewById(R.id.ev_Date);
+        evDate.setFocusable(false);
+        evDate.setClickable(false);
 
-        tv_Time = (TextView) findViewById(R.id.tv_Time);
-        ev_Time = (EditText) findViewById(R.id.ev_Time);
-        ev_Time.setFocusable(false);
-        ev_Time.setClickable(false);
+        tvTime = (TextView) findViewById(R.id.tv_Time);
+        evTime = (EditText) findViewById(R.id.ev_Time);
+        evTime.setFocusable(false);
+        evTime.setClickable(false);
 
-        tv_Cost = (TextView) findViewById(R.id.tv_Cost);
-        ev_Cost = (EditText) findViewById(R.id.ev_Cost);
+        tvCost = (TextView) findViewById(R.id.tv_Cost);
+        evCost = (EditText) findViewById(R.id.ev_Cost);
 
-        btn_Cancle = (Button) findViewById(R.id.btn_Cancle);
-        btn_Submit = (Button) findViewById(R.id.btn_Submit);
+        btnCancle = (Button) findViewById(R.id.btn_Cancle);
+        btnSubmit = (Button) findViewById(R.id.btn_Submit);
 
-        get_latlng = getIntent();
-        lat = get_latlng.getDoubleExtra("Lat", 0);
-        lng = get_latlng.getDoubleExtra("Lng", 0);
+        getLatLng = getIntent();
+        lat = getLatLng.getDoubleExtra("Lat", 0);
+        lng = getLatLng.getDoubleExtra("Lng", 0);
         String str_lat = String.valueOf(lat);
         String str_lng = String.valueOf(lng);
 
         tv1.setText(str_lat);
         tv2.setText(str_lng);
 
-        ev_Date.setOnClickListener(new View.OnClickListener() {
+        evDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 SmoothDateRangePickerFragment smoothDateRangePickerFragment =
@@ -86,14 +86,14 @@ public class AddMarker extends AppCompatActivity {
                             public void onDateRangeSet(SmoothDateRangePickerFragment view, int yearStart, int monthStart, int dayStart,
                                             int yearEnd, int monthEnd, int dayEnd) {
                                 String date = yearStart + "/" + (++monthStart) + "/" + dayStart + " ~ " + yearEnd + "/" + (++monthEnd) + "/" + dayEnd;
-                                ev_Date.setText(date);
+                                evDate.setText(date);
                             }
                         });
                 smoothDateRangePickerFragment.show(getFragmentManager(), "Datepickerdialog");
             }
         });
 
-        ev_Time.setOnClickListener(new View.OnClickListener() {
+        evTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 final TimePickerDialog TimePicker = new TimePickerDialog(AddMarker.this, new TimePickerDialog.OnTimeSetListener() {
@@ -101,14 +101,14 @@ public class AddMarker extends AppCompatActivity {
                     public void onTimeSet(TimePicker timePicker, int hour, int min) {
                         String time_string = String.format("%d시 %d분", hour, min);
                         Toast.makeText(AddMarker.this, time_string, Toast.LENGTH_SHORT).show();
-                        ev_Time.setText(time_string);
+                        evTime.setText(time_string);
                     }
                 }, cal.get(Calendar.HOUR_OF_DAY), cal.get(Calendar.MINUTE), true);
                 TimePicker.show();
             }
         });
 
-        btn_Cancle.setOnClickListener(new View.OnClickListener() {
+        btnCancle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 MapActivity mapActivity = new MapActivity();
@@ -117,14 +117,14 @@ public class AddMarker extends AppCompatActivity {
             }
         });
 
-        btn_Submit.setOnClickListener(new View.OnClickListener(){
+        btnSubmit.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 Time_send send = new Time_send();
 
-                String Date = ev_Date.getText().toString();
-                String Time = ev_Time.getText().toString();
-                String Cost = ev_Cost.getText().toString();
+                String Date = evDate.getText().toString();
+                String Time = evTime.getText().toString();
+                String Cost = evCost.getText().toString();
 
                 String str_lat = tv1.getText().toString();
                 String str_lng = tv2.getText().toString();

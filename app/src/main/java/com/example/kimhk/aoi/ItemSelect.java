@@ -45,6 +45,8 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
     ArrayList<HashMap<String, String>> arrayList;
 
     LatLng center;
+    int markernumber = 1;
+    String str_markernumer = String.valueOf(markernumber);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,7 +71,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         mMap = googleMap;
         mGeocoder = new Geocoder(this);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.537523, 126.96558), 13));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.537523, 126.96558), 10));
 
         setMapMarker();
         initCameraIdle();//카메라 함수
@@ -133,10 +135,10 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
             markers = jsonObj.getJSONArray(TAG_MARKER);
 
             for (int i = 0; i < markers.length(); i++) {
-                JSONObject c = markers.getJSONObject(i);
+                JSONObject jsonObject = markers.getJSONObject(i);
 
-                String marker_lat = c.getString(TAG_MARKER_LAT);
-                String marker_long = c.getString(TAG_MARKER_LONG);
+                String marker_lat = jsonObject.getString(TAG_MARKER_LAT);
+                String marker_long = jsonObject.getString(TAG_MARKER_LONG);
 
                 HashMap<String, String> markerObject = new HashMap<String, String>();
 
@@ -146,11 +148,12 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
                 double load_lat = Double.parseDouble(marker_lat);
                 double load_long = Double.parseDouble(marker_long);
 
-                markerList.add(new MarkerItem(load_lat,load_long));
+                markerList.add(new MarkerItem(load_lat,load_long, markernumber));
             }
 
             for (MarkerItem markerItem : markerList) {
                 addMarker(markerItem, true);
+                markernumber++;
             }
         } catch (JSONException e) {
             e.printStackTrace();

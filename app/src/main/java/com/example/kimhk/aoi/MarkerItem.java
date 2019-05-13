@@ -3,12 +3,11 @@ package com.example.kimhk.aoi;
 public class MarkerItem {
     double lat;
     double lon;
-    int price;
+    int markernumber;
 
-    public MarkerItem(double lat, double lon) {
+    public MarkerItem(double lat, double lon, int markernumber) {
         this.lat = lat; this.lon = lon;
     }
-
 
     public double getLat() {
         return lat;
@@ -26,12 +25,12 @@ public class MarkerItem {
         this.lon = lon;
     }
 
-    public int getPrice() {
-        return price;
+    public int getmarkernumber() {
+        return markernumber;
     }
 
-    public void setPrice(int price) {
-        this.price = price;
+    public void setmarkernumber(int markernumber) {
+        this.markernumber = markernumber;
     }
 
 }

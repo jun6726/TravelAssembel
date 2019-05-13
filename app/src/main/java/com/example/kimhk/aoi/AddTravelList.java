@@ -1,14 +1,11 @@
 package com.example.kimhk.aoi;
 
 import android.content.Intent;
-import android.icu.util.Calendar;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,36 +19,34 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.kakao.usermgmt.StringSet.nickname;
-
 public class AddTravelList extends AppCompatActivity {
     TextView tv;
-    EditText travel_location;
-    Button btn_Cancle2, btn_Submit2;
-    TravelList_send travelList_send;
+    EditText travelLocation;
+    Button btnCancle2, btnSubmit2;
+    TravelList_send travelListSend;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_travel_list);
 
         tv = (TextView) findViewById(R.id.tv);
-        travel_location = (EditText) findViewById(R.id.travel_location);
-        btn_Cancle2 = (Button) findViewById(R.id.btn_Cancle2);
-        btn_Submit2 = (Button) findViewById(R.id.btn_Submit2);
+        travelLocation = (EditText) findViewById(R.id.travel_location);
+        btnCancle2 = (Button) findViewById(R.id.btn_Cancle2);
+        btnSubmit2 = (Button) findViewById(R.id.btn_Submit2);
 
-        btn_Cancle2.setOnClickListener(new View.OnClickListener() {
+        btnCancle2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 finish();
             }
         });
 
-        btn_Submit2.setOnClickListener(new View.OnClickListener(){
+        btnSubmit2.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                String add_location = travel_location.getText().toString();
-                travelList_send = new TravelList_send();
-                travelList_send.execute("http://jun6726.cafe24.com/php_folder/TravelList_send.php", "1023930",add_location);
+                String add_location = travelLocation.getText().toString();
+                travelListSend = new TravelList_send();
+                travelListSend.execute("http://jun6726.cafe24.com/php_folder/TravelList_send.php", "1023930",add_location);
                 Toast.makeText(AddTravelList.this, "제출 : ", Toast.LENGTH_SHORT).show();
 
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);

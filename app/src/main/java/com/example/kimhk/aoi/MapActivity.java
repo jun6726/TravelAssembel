@@ -55,15 +55,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private Boolean mLocationPermissionsGranted = false;
     Marker marker = null; // 마커 변수
     private ArrayList<Marker> arrMarkerList; // 마커 리스트 변수
-    private Geocoder geocoder;
+    private Geocoder mGeocoder;
     private GoogleMap mMap; // 구글맵변수
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;//검색창 위치 자동완성
 
-    public double lat, lon;
-    public Double latitude, longitude;
-
-    Intent Info_Intent;
+    Intent info_Intent;
     LatLng center;
     CardView cardView;
     TextView txtLocationAddress;
@@ -120,7 +117,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        geocoder = new Geocoder(this);
+        mGeocoder = new Geocoder(this);
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
@@ -128,10 +125,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 addMarker(latLng);
 
                 Toast.makeText(MapActivity.this, "래티튜드"+latLng.latitude, Toast.LENGTH_SHORT).show();
-                Info_Intent = new Intent(getApplicationContext(), AddMarker.class);
-                Info_Intent.putExtra("Lat",latLng.latitude);
-                Info_Intent.putExtra("Lng",latLng.longitude);
-                startActivity(Info_Intent);
+                info_Intent = new Intent(getApplicationContext(), AddMarker.class);
+                info_Intent.putExtra("Lat",latLng.latitude);
+                info_Intent.putExtra("Lng",latLng.longitude);
+                startActivity(info_Intent);
             }
         });
         initCameraIdle();//카메라 함수
