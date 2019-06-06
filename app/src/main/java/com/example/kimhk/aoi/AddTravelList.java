@@ -67,7 +67,7 @@ public class AddTravelList extends AppCompatActivity {
             public void onClick(View view) {
                 String add_location = travelLocation.getText().toString();
                 travelListSend = new TravelList_send();
-                travelListSend.execute("http://jun6726.cafe24.com/php_folder/TravelList_send.php", String.valueOf(Login.user_id),add_location);
+                travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", String.valueOf(Login.user_id),add_location);
 
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(add_marker_intent);

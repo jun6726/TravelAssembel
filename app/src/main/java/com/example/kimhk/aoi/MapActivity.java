@@ -136,7 +136,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String Expense = ev_Expense.getText().toString();
                         Addmarker addmarker = new Addmarker();
-                        addmarker.execute("http://jun6726.cafe24.com/php_folder/Marker_add.php", Expense, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude) );
+                        addmarker.execute("http://jun6726.cafe24.com/php_folder/add_folder/Marker_add.php", Expense, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude) );
                         addMarker(latLng);
                     }
                 });

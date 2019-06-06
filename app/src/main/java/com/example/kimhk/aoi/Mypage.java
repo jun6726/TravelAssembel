@@ -59,7 +59,7 @@ public class Mypage extends Activity {
 
         travelList = (ListView) findViewById(R.id.Travel_List);
         travelArrayList = new ArrayList<HashMap<String, String>>();
-        getData("http://jun6726.cafe24.com/php_folder/select_TravelList.php"); //수정 필요
+        getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_list.php"); //수정 필요
     }
 
     public void getData(String url) {
@@ -136,7 +136,7 @@ public class Mypage extends Activity {
                     dlg.setNegativeButton("계획 삭제", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            getData("http://jun6726.cafe24.com/php_folder/plan_delete.php");
+                            getData("http://jun6726.cafe24.com/php_folder/delete_folder/plan_delete.php");
                             finish();
                             Intent restart = new Intent(Mypage.this, Mypage.class);
                             startActivity(restart);

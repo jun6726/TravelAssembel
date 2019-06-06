@@ -59,7 +59,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         arrayList = new ArrayList<HashMap<String, String>>();
 
         Position_send position_send = new Position_send();
-        position_send.execute("http://jun6726.cafe24.com/php_folder/Item_select.php", getData_position);
+        position_send.execute("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", getData_position);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -81,7 +81,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 
 
     public void setMapMarker() {
-        getData("http://jun6726.cafe24.com/php_folder/marker_test.php",getData_position);
+        getData("http://jun6726.cafe24.com/php_folder/test_folder/marker_test.php",getData_position);
     }
 
     // Marking lat. long. on the GoogleMaps
