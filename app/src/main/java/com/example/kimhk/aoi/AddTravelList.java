@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,10 +20,11 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Date;
 
 public class AddTravelList extends AppCompatActivity {
-    TextView tv;
-    EditText travelLocation;
+    TextView tv, tv_period;
+    EditText travelLocation, travelPeriod;
     Button btnCancle2, btnSubmit2;
     TravelList_send travelListSend;
 
@@ -31,8 +34,26 @@ public class AddTravelList extends AppCompatActivity {
 
         tv = (TextView) findViewById(R.id.tv);
         travelLocation = (EditText) findViewById(R.id.travel_location);
+        tv_period = (TextView) findViewById(R.id.tv_period);
+        travelPeriod = (EditText) findViewById(R.id.travelPeriod);
         btnCancle2 = (Button) findViewById(R.id.btn_Cancle2);
         btnSubmit2 = (Button) findViewById(R.id.btn_Submit2);
+
+        travelPeriod.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SmoothDateRangePickerFragment smoothDateRangePickerFragment =
+                        SmoothDateRangePickerFragment.newInstance(new SmoothDateRangePickerFragment.OnDateRangeSetListener() {
+                            @Override
+                            public void onDateRangeSet(SmoothDateRangePickerFragment view, int yearStart, int monthStart, int dayStart,
+                                                       int yearEnd, int monthEnd, int dayEnd) {
+                                String date = yearStart + "/" + (++monthStart) + "/" + dayStart + " ~ " + yearEnd + "/" + (++monthEnd) + "/" + dayEnd;
+                                travelPeriod.setText(date);
+                            }
+                        });
+                smoothDateRangePickerFragment.show(getFragmentManager(), "Datepickerdialog");
+            }
+        });
 
         btnCancle2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -46,13 +67,13 @@ public class AddTravelList extends AppCompatActivity {
             public void onClick(View view) {
                 String add_location = travelLocation.getText().toString();
                 travelListSend = new TravelList_send();
-                travelListSend.execute("http://jun6726.cafe24.com/php_folder/TravelList_send.php", "1023930",add_location);
-                Toast.makeText(AddTravelList.this, "제출 : ", Toast.LENGTH_SHORT).show();
+                travelListSend.execute("http://jun6726.cafe24.com/php_folder/TravelList_send.php", String.valueOf(Login.user_id),add_location);
 
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(add_marker_intent);
             }
         });
+
     }
 
     private class TravelList_send extends AsyncTask<String, Void, String>{
@@ -62,6 +83,7 @@ public class AddTravelList extends AppCompatActivity {
             String serverURL = (String) params[0];
             String userid = (String) params[1];
             String location = (String) params[2];
+
             String parameters = "&userid=" + userid + "&location=" + location;
 
             try{

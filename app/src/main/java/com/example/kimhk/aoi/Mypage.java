@@ -1,9 +1,11 @@
 package com.example.kimhk.aoi;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -29,11 +31,9 @@ import java.util.HashMap;
 public class Mypage extends Activity {
     String myJSON;
     private static final String TAG_RESULTS = "result";
-    private static final String TAG_ID = "user_id";
-    private static final String TAG_TRAVEL_NUMBER = "travel_number";
-    private static final String TAG_TERM="term";
+    private static final String TAG_DATE_START="Date_start";
+    private static final String TAG_DATE_END="Date_end";
     private static final String TAG_LOCATION="location";
-    private static final String TAG_TRAVEL_PROGRESS="travel_progress";
 
     public static Intent Map_intent, Item_select_intent, add_travel_intent;
 
@@ -41,27 +41,19 @@ public class Mypage extends Activity {
     ArrayList<HashMap<String, String>> travelArrayList;
 
     ListView travelList;
-    Button btnDate, btnRemove;
+    Button btnAddTravel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
 
-        btnDate = (Button) findViewById(R.id.btn_date);
-        btnRemove = (Button) findViewById(R.id.btn_remove);
-        btnDate.setOnClickListener(new View.OnClickListener() {
+        btnAddTravel = (Button) findViewById(R.id.btnAddTravel);
+        btnAddTravel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 add_travel_intent = new Intent(getApplicationContext(), AddTravelList.class);
                 startActivity(add_travel_intent);
-            }
-        });
-
-        btnRemove.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getData("http://jun6726.cafe24.com/php_folder/marker_delete.php");
             }
         });
 
@@ -108,26 +100,22 @@ public class Mypage extends Activity {
                     for (int i = 0; i < trasvels.length(); i++) {
                         JSONObject c = trasvels.getJSONObject(i);
 
-                        String user_id = c.getString(TAG_ID);
-                        String travel_number = c.getString(TAG_TRAVEL_NUMBER);
-                        String term = c.getString(TAG_TERM);
+                        String date_start = c.getString(TAG_DATE_START);
+                        String date_end = c.getString(TAG_DATE_END);
                         String location = c.getString(TAG_LOCATION);
-                        String travel_progress = c.getString(TAG_TRAVEL_PROGRESS);
 
                         HashMap<String, String> persons = new HashMap<String, String>();
 
-                        persons.put(TAG_ID, user_id);
-                        persons.put(TAG_TRAVEL_NUMBER, travel_number);
-                        persons.put(TAG_TERM, term);
+                        persons.put(TAG_DATE_START, date_start);
+                        persons.put(TAG_DATE_END, date_end);
                         persons.put(TAG_LOCATION, location);
-                        persons.put(TAG_TRAVEL_PROGRESS,travel_progress);
 
                         travelArrayList.add(persons);
                     }
                     ListAdapter adapter = new SimpleAdapter(
                             Mypage.this, travelArrayList, R.layout.list_item,
-                            new String[]{TAG_ID, TAG_TRAVEL_NUMBER, TAG_TERM, TAG_LOCATION ,TAG_TRAVEL_PROGRESS},
-                    new int[]{R.id.ID, R.id.Travel_no, R.id.Term, R.id.Location, R.id.Travel_progress}
+                            new String[]{TAG_DATE_START, TAG_DATE_END,TAG_LOCATION},
+                    new int[]{R.id.date_start, R.id.date_end, R.id.Location}
             );
             travelList.setAdapter(adapter);
 
@@ -135,8 +123,27 @@ public class Mypage extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     Item_select_intent = new Intent(getApplicationContext(), ItemSelect.class);
-                    Item_select_intent.putExtra("position", travelArrayList.get(position).get(TAG_ID));
+                    Item_select_intent.putExtra("position", travelArrayList.get(position).get(TAG_LOCATION));
                     startActivity(Item_select_intent);
+                }
+            });
+
+            travelList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                    AlertDialog.Builder dlg = new AlertDialog.Builder(Mypage.this);
+                    dlg.setTitle("계획 삭제");
+                    dlg.setNegativeButton("계획 삭제", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            getData("http://jun6726.cafe24.com/php_folder/plan_delete.php");
+                            finish();
+                            Intent restart = new Intent(Mypage.this, Mypage.class);
+                            startActivity(restart);
+                        }
+                    });
+                    dlg.show();
+                    return true;
                 }
             });
 

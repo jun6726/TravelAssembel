@@ -79,8 +79,9 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 
     public ArrayList<MarkerItem> markerList = new ArrayList();
 
+
     public void setMapMarker() {
-        getData("http://jun6726.cafe24.com/php_folder/marker_test.php");
+        getData("http://jun6726.cafe24.com/php_folder/marker_test.php",getData_position);
     }
 
     // Marking lat. long. on the GoogleMaps
@@ -88,7 +89,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
 
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(position);
+        markerOptions.position(new LatLng(position.latitude, position.longitude));
 
         return mMap.addMarker(markerOptions);
     }
@@ -99,15 +100,27 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
     private static final String TAG_MARKER_LONG = "marker_long";
     String markerjson = null;
 
-    public void getData(String url) {
+    public void getData(String url, String getData_position) {
         class GetDataJSON extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
                 String uri = params[0];
+//                String getData_position = params[1];
+//                String parameters = "&position=" + getData_position;
+
                 BufferedReader bufferedReader = null;
                 try {
                     URL url = new URL(uri);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                    con.setRequestMethod("POST");
+                    con.connect();
+
+                    OutputStream outputStream = con.getOutputStream();
+//                    outputStream.write(parameters.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+
                     StringBuilder sb = new StringBuilder();
                     bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     String json;
@@ -148,12 +161,13 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
                 double load_lat = Double.parseDouble(marker_lat);
                 double load_long = Double.parseDouble(marker_long);
 
-                markerList.add(new MarkerItem(load_lat,load_long, markernumber));
+//                markerList.add(new MarkerItem(load_lat,load_long, markernumber));
+                markerList.add(new MarkerItem(load_lat,load_long));
             }
 
             for (MarkerItem markerItem : markerList) {
                 addMarker(markerItem, true);
-                markernumber++;
+//                markernumber++;
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -169,7 +183,6 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
                 marker.remove();
             }
         });
-
         dlg.show();
         return true;
     }

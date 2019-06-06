@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -14,9 +15,11 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +41,13 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -60,12 +69,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;//검색창 위치 자동완성
 
-    Intent info_Intent;
     LatLng center;
     CardView cardView;
     TextView txtLocationAddress;
-    ListView plan_list;
-    Button btn_marker_cancle, btn_marker_complete;
+    Button plan_submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +84,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         txtLocationAddress.setMarqueeRepeatLimit(-1);
         txtLocationAddress.setSelected(true);
         cardView = findViewById(R.id.cardView);
-        btn_marker_cancle = findViewById(R.id.btn_marker_cancle);
-        btn_marker_complete = findViewById(R.id.btn_marker_complete);
-        plan_list = findViewById(R.id.plan_list);
+        plan_submit = findViewById(R.id.plan_submit);
 
         //카드뷰
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -99,17 +104,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         getLocationPermission();
 
-        btn_marker_cancle.setOnClickListener(new View.OnClickListener() {
+        plan_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
-            }
-        });
-
-        btn_marker_complete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
+                Intent finishAB = new Intent(MapActivity.this, Mypage.class);
+                getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(finishAB);
             }
         });
     }
@@ -121,26 +121,92 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
-            public void onMapClick(LatLng latLng) {
-                addMarker(latLng);
+            public void onMapClick(final LatLng latLng) {
 
-                Toast.makeText(MapActivity.this, "래티튜드"+latLng.latitude, Toast.LENGTH_SHORT).show();
-                info_Intent = new Intent(getApplicationContext(), AddMarker.class);
-                info_Intent.putExtra("Lat",latLng.latitude);
-                info_Intent.putExtra("Lng",latLng.longitude);
-                startActivity(info_Intent);
+                AlertDialog.Builder addMarker_dialog = new AlertDialog.Builder(MapActivity.this);
+                addMarker_dialog.setTitle("새로운 여행지 등록")
+                               .setMessage("여행지 예상 비용을 입력해주세요.");
+
+                final EditText ev_Expense = new EditText(MapActivity.this);
+                ev_Expense.setInputType(InputType.TYPE_CLASS_NUMBER);
+                addMarker_dialog.setView(ev_Expense);
+
+                addMarker_dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        String Expense = ev_Expense.getText().toString();
+                        Addmarker addmarker = new Addmarker();
+                        addmarker.execute("http://jun6726.cafe24.com/php_folder/Marker_add.php", Expense, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude) );
+                        addMarker(latLng);
+                    }
+                });
+
+                addMarker_dialog.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+                addMarker_dialog.show();
             }
         });
         initCameraIdle();//카메라 함수
         mMap.setOnMarkerClickListener(this);
     }
-    
+
+    public class Addmarker extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String serverURL = (String)params[0];
+            String Expense = (String)params[1];
+            String Latitude = (String)params[2];
+            String Longitude = (String)params[3];
+
+            String postParameters = "&Expense=" + Expense +"&Latitude=" + Latitude + "&Longitude=" + Longitude;
+
+            try{
+                URL url = new URL(serverURL);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
+
+                httpURLConnection.setReadTimeout(5000);
+                httpURLConnection.setConnectTimeout(5000);
+                httpURLConnection.setRequestMethod("POST");
+                httpURLConnection.connect();
+
+                OutputStream outputStream = httpURLConnection.getOutputStream();
+                outputStream.write(postParameters.getBytes("UTF-8"));
+                outputStream.flush();
+                outputStream.close();
+
+                InputStream inputStream;
+                inputStream = httpURLConnection.getInputStream();
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+
+                StringBuilder sb = new StringBuilder();
+                String line = null;
+
+                while((line = bufferedReader.readLine()) != null){
+                    sb.append(line);
+                }
+                bufferedReader.close();
+                return sb.toString();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
     // Marking lat. long. on the GoogleMaps
     private void addMarker(LatLng latlng) {
         MarkerOptions markerOptions = new MarkerOptions();
         markerOptions.position(latlng);
         mMap.addMarker(markerOptions);
     }
+
 
     public boolean onMarkerClick(final Marker marker) {
         AlertDialog.Builder dlg = new AlertDialog.Builder(MapActivity.this);
@@ -178,7 +244,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 }
                 txtLocationAddress.setText(strAddress.toString());
             } else {
-                txtLocationAddress.setText("Searching Current Address");
+                txtLocationAddress.setText("검색하고자 하는 장소를 입력해주세요");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -208,7 +274,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 } else {
                     txtLocationAddress.setText(place.getAddress());
                 }
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 32);
+                CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(place.getLatLng(), 30);
                 mMap.animateCamera(cameraUpdate);
             } else if (resultCode == PlaceAutocomplete.RESULT_ERROR) {
             }}

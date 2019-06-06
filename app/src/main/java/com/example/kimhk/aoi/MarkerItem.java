@@ -5,7 +5,7 @@ public class MarkerItem {
     double lon;
     int markernumber;
 
-    public MarkerItem(double lat, double lon, int markernumber) {
+    public MarkerItem(double lat, double lon) {
         this.lat = lat; this.lon = lon;
     }
 

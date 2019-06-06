@@ -51,10 +51,10 @@ public class Login extends AppCompatActivity {
     LinearLayout success_layout;
     Button logout_btn,mypage;
     LoginButton loginButton;
-    public String nickname;
-    public long user_id;
+    public static long user_id;
 
     public static Login mrequestLogout; // 메인에서 로그아웃 함수 불러주기 위한 변수
+    public static Login sendUserId;
     AQuery aQuery;
 
     Intent mypage_intent;
@@ -65,6 +65,7 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mrequestLogout = this; // 메인에서 로그아웃 함수 불러주기 위한 변수
+        sendUserId = this;
         mypage = (Button) findViewById(R.id.mypage);
         aQuery = new AQuery(this);
         callback = new SessionCallback();
@@ -202,9 +203,7 @@ public class Login extends AppCompatActivity {
                 Log.e("onNotSignedUp", "onNotSignedUp");
             }
         });
-
         startActivity(mypage_intent);
-
     }
 
     @Override

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/tools"
     xmlns:map="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    xmlns:card_view="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
     android:weightSum="10">
 
@@ -34,44 +34,32 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:padding="16dp"
                 android:scrollHorizontally="true"
-                android:text="Current Marker Address"
-                android:singleLine="true" />
+                android:singleLine="true"
+                android:text="Current Marker Address" />
 
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:map="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/map"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:context=".MapsActivity" />
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <Button
-        android:id="@+id/btn_marker_cancle"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="189dp"
-        android:background="@drawable/cast_abc_scrubber_control_to_pressed_mtrl_005"
-        android:backgroundTint="@color/red" />
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="20"
+            card_view:context=".MapsActivity" />
 
-    <Button
-        android:id="@+id/btn_marker_complete"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_marginTop="0dp"
-        android:layout_marginEnd="52dp"
-        android:background="@drawable/selected_bg"
-        android:textAlignment="viewStart" />
-
-    <ListView
-        android:id="@+id/plan_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <Button
+            android:id="@+id/plan_submit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="완료" />
+    </LinearLayout>
 
 </LinearLayout>

@@ -33,6 +33,17 @@
         android:inputType="textPersonName"
         android:textSize="15sp" />
 
+    <TextView
+        android:id="@+id/tv_period"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/travel_location"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="40dp"
+        android:text="여행 기간"
+        android:textSize="30sp" />
+
     <Button
         android:id="@+id/btn_Cancle2"
         android:layout_width="60dp"
@@ -56,6 +67,18 @@
         android:background="@drawable/cast_abc_scrubber_control_to_pressed_mtrl_005"
         android:backgroundTint="#009950"
         android:textAlignment="textEnd" />
+
+    <EditText
+        android:id="@+id/travelPeriod"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_period"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginTop="30dp"
+        android:ems="10"
+        android:hint="기간을 선택해주세요"
+        android:inputType="textPersonName" />
 
     <!--<CalendarView-->
         <!--android:id="@+id/calendarView"-->
