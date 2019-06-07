@@ -27,6 +27,7 @@ public class AddTravelList extends AppCompatActivity {
     EditText travelLocation, travelPeriod;
     Button btnCancle2, btnSubmit2;
     TravelList_send travelListSend;
+    String date_start, date_end;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +40,7 @@ public class AddTravelList extends AppCompatActivity {
         btnCancle2 = (Button) findViewById(R.id.btn_Cancle2);
         btnSubmit2 = (Button) findViewById(R.id.btn_Submit2);
 
+
         travelPeriod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,8 +49,9 @@ public class AddTravelList extends AppCompatActivity {
                             @Override
                             public void onDateRangeSet(SmoothDateRangePickerFragment view, int yearStart, int monthStart, int dayStart,
                                                        int yearEnd, int monthEnd, int dayEnd) {
-                                String date = yearStart + "/" + (++monthStart) + "/" + dayStart + " ~ " + yearEnd + "/" + (++monthEnd) + "/" + dayEnd;
-                                travelPeriod.setText(date);
+                                date_start = yearStart + "/" + (++monthStart) + "/" + dayStart ;
+                                 date_end =  yearEnd + "/" + (++monthEnd) + "/" + dayEnd;
+                                travelPeriod.setText(date_start + " ~ " + date_end);
                             }
                         });
                 smoothDateRangePickerFragment.show(getFragmentManager(), "Datepickerdialog");
@@ -67,7 +70,7 @@ public class AddTravelList extends AppCompatActivity {
             public void onClick(View view) {
                 String add_location = travelLocation.getText().toString();
                 travelListSend = new TravelList_send();
-                travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", String.valueOf(Login.user_id),add_location);
+                travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", String.valueOf(Login.user_id),add_location,date_start, date_end);
 
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
                 startActivity(add_marker_intent);
@@ -83,8 +86,10 @@ public class AddTravelList extends AppCompatActivity {
             String serverURL = (String) params[0];
             String userid = (String) params[1];
             String location = (String) params[2];
+            String date_start = (String) params[3];
+            String date_end = (String)params[4];
 
-            String parameters = "&userid=" + userid + "&location=" + location;
+            String parameters = "&userid=" + userid + "&location=" + location + "&date_start=" + date_start + "&date_end=" + date_end;
 
             try{
                 URL url = new URL(serverURL);
