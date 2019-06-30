@@ -28,7 +28,7 @@ import java.util.HashMap;
  * Created by kimhk on 2019-01-19.
  */
 
-public class Mypage extends Activity {
+public class    Mypage extends Activity {
     String myJSON;
     private static final String TAG_RESULTS = "result";
     private static final String TAG_DATE_START="Date_start";
