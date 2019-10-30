@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.AdapterView;
@@ -12,6 +14,8 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+
+import com.example.kimhk.aoi.Bluetooth.MainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,6 +27,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+
 
 /**
  * Created by kimhk on 2019-01-19.
@@ -41,7 +46,15 @@ public class    Mypage extends Activity {
     ArrayList<HashMap<String, String>> travelArrayList;
 
     ListView travelList;
-    Button btnAddTravel;
+    Button btnAddTravel, btnBluetooth;
+
+    private BluetoothService btService = null;
+    private final Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +62,25 @@ public class    Mypage extends Activity {
         setContentView(R.layout.activity_mypage);
 
         btnAddTravel = (Button) findViewById(R.id.btnAddTravel);
+        btnBluetooth = (Button) findViewById(R.id.btnBluetooth);
+
         btnAddTravel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 add_travel_intent = new Intent(getApplicationContext(), AddTravelList.class);
                 startActivity(add_travel_intent);
+            }
+        });
+
+        if(btService == null){
+            btService = new BluetoothService(this,mHandler);
+        }
+
+        btnBluetooth.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent bluetooth = new Intent(getApplication(), MainActivity.class);
+                startActivity(bluetooth);
             }
         });
 
@@ -79,7 +106,7 @@ public class    Mypage extends Activity {
                     }
                     return sb.toString().trim();
                 } catch (Exception e) {
-                    return null;
+                    return null; // cleartext IOException 발생, 매니패스트 애플리케이션부에 android:usesCleartextTraffic="true"으로 해결
                 }
             }
             @Override
