@@ -154,6 +154,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 mThreadConnectedBluetooth.write("t");
+                finish();
             }
         });
     }
@@ -375,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
             byte[] bytes = str.getBytes();
             try {
                 mmOutStream.write(bytes);
-                Log.d("Outstream", ""+bytes);
+//                Log.d("Outstream", ""+bytes);
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "데이터 전송 중 오류가 발생했습니다.", Toast.LENGTH_LONG).show();
             }
