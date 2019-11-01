@@ -86,7 +86,9 @@ public class MainActivity extends AppCompatActivity {
         mBluetoothLeAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
         beacon = new Vector<>(3);
         mScanSettings = new ScanSettings.Builder();
-        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
+//        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_BALANCED);
+//        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
+        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER);
         scanSettings = mScanSettings.build();
 
         mTvBluetoothStatus = (TextView)findViewById(R.id.tvBluetoothStatus);

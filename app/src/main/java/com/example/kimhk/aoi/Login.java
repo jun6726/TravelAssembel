@@ -203,7 +203,7 @@ public class Login extends AppCompatActivity {
                 Log.e("onNotSignedUp", "onNotSignedUp");
             }
         });
-        startActivity(mypage_intent);
+//        startActivity(mypage_intent);
     }
 
     @Override

@@ -1,20 +1,30 @@
 package com.example.kimhk.aoi;
 
 import android.app.Activity;
+import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TabHost;
+import android.widget.TextView;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.kimhk.aoi.Bluetooth.MainActivity;
 
 import org.json.JSONArray;
@@ -27,13 +37,10 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-
 /**
  * Created by kimhk on 2019-01-19.
  */
-
-public class    Mypage extends Activity {
+public class    Mypage extends TabActivity {
     String myJSON;
     private static final String TAG_RESULTS = "result";
     private static final String TAG_DATE_START="Date_start";
@@ -45,7 +52,7 @@ public class    Mypage extends Activity {
     JSONArray trasvels = null;
     ArrayList<HashMap<String, String>> travelArrayList;
 
-    ListView travelList;
+    SwipeMenuListView travelList;
     Button btnAddTravel, btnBluetooth;
 
     private BluetoothService btService = null;
@@ -60,6 +67,19 @@ public class    Mypage extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
+
+        TabHost tabs = getTabHost();
+        TabHost.TabSpec tabSpecPop = tabs.newTabSpec("Pop").setIndicator("Mypage");
+        tabSpecPop.setContent(R.id.tabpop);
+        tabs.addTab(tabSpecPop);
+
+        TabHost.TabSpec tabSpecBluetooth = tabs.newTabSpec("bluetooth").setIndicator("Bluetooth");
+        tabSpecBluetooth.setContent(new Intent(this, MainActivity.class));
+        tabs.addTab(tabSpecBluetooth);
+
+        TabHost.TabSpec tabSpecLogin = tabs.newTabSpec("login").setIndicator("Login");
+        tabSpecLogin.setContent(new Intent(this, Login.class));
+        tabs.addTab(tabSpecLogin);
 
         btnAddTravel = (Button) findViewById(R.id.btnAddTravel);
         btnBluetooth = (Button) findViewById(R.id.btnBluetooth);
@@ -84,7 +104,41 @@ public class    Mypage extends Activity {
             }
         });
 
-        travelList = (ListView) findViewById(R.id.Travel_List);
+        travelList = (SwipeMenuListView) findViewById(R.id.Travel_List);
+        travelList.setMenuCreator(creator);
+        travelList.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+                travelList.smoothOpenMenu(position);
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+                travelList.smoothOpenMenu(position);
+            }
+        });
+        travelList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+                switch (index) {
+                    case 0:
+                        // open
+                        break;
+                    case 1:
+                        // delete
+                        getData("http://jun6726.cafe24.com/php_folder/delete_folder/plan_delete.php");
+                        Intent restart = new Intent(Mypage.this, Mypage.class);
+                        startActivity(restart);
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+
         travelArrayList = new ArrayList<HashMap<String, String>>();
         getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_list.php"); //수정 필요
     }
@@ -120,29 +174,27 @@ public class    Mypage extends Activity {
     }
 
     public void showList() {
-                try {
-                    JSONObject jsonObj = new JSONObject(myJSON);
-                    trasvels = jsonObj.getJSONArray(TAG_RESULTS);
+        try {
+            JSONObject jsonObj = new JSONObject(myJSON);
+            trasvels = jsonObj.getJSONArray(TAG_RESULTS);
 
-                    for (int i = 0; i < trasvels.length(); i++) {
-                        JSONObject c = trasvels.getJSONObject(i);
+            for (int i = 0; i < trasvels.length(); i++) {
+                JSONObject c = trasvels.getJSONObject(i);
 
-                        String date_start = c.getString(TAG_DATE_START);
-                        String date_end = c.getString(TAG_DATE_END);
-                        String location = c.getString(TAG_LOCATION);
+                String date_start = c.getString(TAG_DATE_START);
+                String date_end = c.getString(TAG_DATE_END);
+                String location = c.getString(TAG_LOCATION);
 
-                        HashMap<String, String> persons = new HashMap<String, String>();
+                HashMap<String, String> persons = new HashMap<String, String>();
 
-                        persons.put(TAG_DATE_START, date_start);
-                        persons.put(TAG_DATE_END, date_end);
-                        persons.put(TAG_LOCATION, location);
+                persons.put(TAG_DATE_START, date_start);
+                persons.put(TAG_DATE_END, date_end);
+                persons.put(TAG_LOCATION, location);
 
-                        travelArrayList.add(persons);
-                    }
-                    ListAdapter adapter = new SimpleAdapter(
-                            Mypage.this, travelArrayList, R.layout.list_item,
-                            new String[]{TAG_DATE_START, TAG_DATE_END,TAG_LOCATION},
-                    new int[]{R.id.date_start, R.id.date_end, R.id.Location}
+                travelArrayList.add(persons);
+            }
+            ListAdapter adapter = new SimpleAdapter(Mypage.this, travelArrayList, R.layout.list_item,
+                    new String[]{TAG_DATE_START, TAG_DATE_END,TAG_LOCATION}, new int[]{R.id.date_start, R.id.date_end, R.id.Location}
             );
             travelList.setAdapter(adapter);
 
@@ -154,28 +206,34 @@ public class    Mypage extends Activity {
                     startActivity(Item_select_intent);
                 }
             });
-
-            travelList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                @Override
-                public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    AlertDialog.Builder dlg = new AlertDialog.Builder(Mypage.this);
-                    dlg.setTitle("계획 삭제");
-                    dlg.setNegativeButton("계획 삭제", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialogInterface, int i) {
-                            getData("http://jun6726.cafe24.com/php_folder/delete_folder/plan_delete.php");
-                            finish();
-                            Intent restart = new Intent(Mypage.this, Mypage.class);
-                            startActivity(restart);
-                        }
-                    });
-                    dlg.show();
-                    return true;
-                }
-            });
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
+
+    SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+        @Override
+        public void create(SwipeMenu menu) {
+            // create "Modify" item
+            SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
+            openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
+            openItem.setWidth(200);
+            openItem.setTitle("Modi");
+            openItem.setTitleSize(18);
+            openItem.setTitleColor(Color.WHITE);
+            menu.addMenuItem(openItem);
+
+            // create "delete" item
+            SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+            deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+            deleteItem.setWidth(200);
+//            deleteItem.setIcon(R.drawable.del);
+
+            deleteItem.setTitle("Del");
+            deleteItem.setTitleSize(18);
+            deleteItem.setTitleColor(Color.WHITE);
+            menu.addMenuItem(deleteItem);
+        }
+    };
 }

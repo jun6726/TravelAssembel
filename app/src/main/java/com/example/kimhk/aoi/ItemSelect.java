@@ -49,7 +49,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
     String str_markernumer = String.valueOf(markernumber);
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_item_selected);
 
