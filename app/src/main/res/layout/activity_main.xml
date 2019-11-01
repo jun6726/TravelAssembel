@@ -16,7 +16,7 @@
             android:id="@+id/btnBluetoothOn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="블루투스 ON"
+            android:background="@drawable/btn_bluetoothon"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -26,43 +26,10 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
-            android:text="블루투스 OFF"
+            android:background="@drawable/btn_bluetoothoff"
             app:layout_constraintStart_toEndOf="@+id/btnBluetoothOn"
             app:layout_constraintTop_toTopOf="@+id/btnBluetoothOn" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/tvBluetoothStatus"
-        android:layout_width="170dp"
-        android:layout_height="20dp"
-        android:layout_marginTop="10dp"
-        android:text="status"
-        app:layout_constraintStart_toStartOf="@+id/btnBluetoothOn"
-        app:layout_constraintTop_toBottomOf="@+id/btnBluetoothOn" />
-
-    <Button
-        android:id="@+id/btnConnect"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="연결하기"
-        app:layout_constraintStart_toStartOf="@+id/tvBluetoothStatus"
-        app:layout_constraintTop_toBottomOf="@+id/tvBluetoothStatus" />
-
-    <Button
-        android:id="@+id/btnStop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="정지" />
-
-    <TextView
-        android:id="@+id/tvReceiveData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:text="Receive"
-        app:layout_constraintStart_toStartOf="@+id/btnSendData"
-        app:layout_constraintTop_toBottomOf="@+id/btnSendData" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -85,9 +52,7 @@
             android:id="@+id/btnSendData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="전송"
-            app:layout_constraintStart_toStartOf="@+id/btnConnect"
-            app:layout_constraintTop_toBottomOf="@+id/btnConnect" />
+            android:text="전송"/>
     </LinearLayout>
 
     <ListView

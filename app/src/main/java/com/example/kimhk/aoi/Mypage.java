@@ -40,7 +40,7 @@ import java.util.HashMap;
 /**
  * Created by kimhk on 2019-01-19.
  */
-public class    Mypage extends TabActivity {
+public class Mypage extends TabActivity {
     String myJSON;
     private static final String TAG_RESULTS = "result";
     private static final String TAG_DATE_START="Date_start";
@@ -53,7 +53,6 @@ public class    Mypage extends TabActivity {
     ArrayList<HashMap<String, String>> travelArrayList;
 
     SwipeMenuListView travelList;
-    Button btnAddTravel, btnBluetooth;
 
     private BluetoothService btService = null;
     private final Handler mHandler = new Handler() {
@@ -69,40 +68,25 @@ public class    Mypage extends TabActivity {
         setContentView(R.layout.activity_mypage);
 
         TabHost tabs = getTabHost();
-        TabHost.TabSpec tabSpecPop = tabs.newTabSpec("Pop").setIndicator("Mypage");
-        tabSpecPop.setContent(R.id.tabpop);
-        tabs.addTab(tabSpecPop);
+        TabHost.TabSpec tabSpecMypage = tabs.newTabSpec("Mypage").setIndicator("",getResources().getDrawable(R.drawable.airplane));
+        tabSpecMypage.setContent(R.id.tabMypage);
+        tabs.addTab(tabSpecMypage);
 
-        TabHost.TabSpec tabSpecBluetooth = tabs.newTabSpec("bluetooth").setIndicator("Bluetooth");
+        TabHost.TabSpec tabSpecAddTravel = tabs.newTabSpec("AddTravel").setIndicator("",getResources().getDrawable(R.drawable.memo));
+        tabSpecAddTravel.setContent(new Intent(this, AddTravelList.class));
+        tabs.addTab(tabSpecAddTravel);
+
+        TabHost.TabSpec tabSpecBluetooth = tabs.newTabSpec("Bluetooth").setIndicator("",getResources().getDrawable(R.drawable.carrier));
         tabSpecBluetooth.setContent(new Intent(this, MainActivity.class));
         tabs.addTab(tabSpecBluetooth);
 
-        TabHost.TabSpec tabSpecLogin = tabs.newTabSpec("login").setIndicator("Login");
+        TabHost.TabSpec tabSpecLogin = tabs.newTabSpec("Login").setIndicator("",getResources().getDrawable(R.drawable.login));
         tabSpecLogin.setContent(new Intent(this, Login.class));
         tabs.addTab(tabSpecLogin);
-
-        btnAddTravel = (Button) findViewById(R.id.btnAddTravel);
-        btnBluetooth = (Button) findViewById(R.id.btnBluetooth);
-
-        btnAddTravel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                add_travel_intent = new Intent(getApplicationContext(), AddTravelList.class);
-                startActivity(add_travel_intent);
-            }
-        });
 
         if(btService == null){
             btService = new BluetoothService(this,mHandler);
         }
-
-        btnBluetooth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent bluetooth = new Intent(getApplication(), MainActivity.class);
-                startActivity(bluetooth);
-            }
-        });
 
         travelList = (SwipeMenuListView) findViewById(R.id.Travel_List);
         travelList.setMenuCreator(creator);

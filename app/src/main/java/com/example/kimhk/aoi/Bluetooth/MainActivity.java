@@ -1,6 +1,7 @@
 package com.example.kimhk.aoi.Bluetooth;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -71,36 +72,30 @@ public class MainActivity extends AppCompatActivity {
     final static int BT_CONNECTING_STATUS = 3;
     final static UUID BT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+    double Beacon1, Beacon2, Beacon3;
     RssiCal rssiCal;
 
+    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ActivityCompat.requestPermissions(this,
-                new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS);
-        beaconListView = (ListView) findViewById(R.id.beaconListView);
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
-        mBluetoothLeAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
-        beacon = new Vector<>(3);
-        mScanSettings = new ScanSettings.Builder();
-//        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_BALANCED);
-//        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY);
-        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER);
-        scanSettings = mScanSettings.build();
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSIONS);
 
-        mTvBluetoothStatus = (TextView)findViewById(R.id.tvBluetoothStatus);
-        mTvReceiveData = (TextView)findViewById(R.id.tvReceiveData);
+        beaconListView = (ListView) findViewById(R.id.beaconListView);
         mTvSendData =  (EditText) findViewById(R.id.tvSendData);
         mBtnBluetoothConnect = (Button)findViewById(R.id.btnBluetoothOn);
         mBtnBluetoothDisconnect = (Button)findViewById(R.id.btnBluetoothOff);
         mBtnSendData = (Button)findViewById(R.id.btnSendData);
-        mBtnStop = (Button)findViewById(R.id.btnStop);
 
-//        scanFilters = new Vector<>();
-//        ScanFilter.Builder scanFilter = new ScanFilter.Builder();
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
+        mBluetoothLeAdvertiser = mBluetoothAdapter.getBluetoothLeAdvertiser();
+        beacon = new Vector<>(3);
+
+        mScanSettings = new ScanSettings.Builder();
+        mScanSettings.setScanMode(ScanSettings.SCAN_MODE_LOW_POWER);
+        scanSettings = mScanSettings.build();
         scanFilter.setDeviceAddress("00:15:84:00:56:32"); //ex) 00:00:00:00:00:00
         ScanFilter scan1 = scanFilter.build();
         scanFilters.add(scan1);
@@ -151,18 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         };
-
-        mBtnStop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mThreadConnectedBluetooth.write("t");
-                finish();
-            }
-        });
     }
-
-    double Beacon1, Beacon2, Beacon3;
-
     ScanCallback mScanCallback = new ScanCallback() {
         @Override
         public void onScanResult(int callbackType, final ScanResult result) {
@@ -181,14 +165,10 @@ public class MainActivity extends AppCompatActivity {
                             public void run() {
                                 if (String.valueOf(result.getDevice().getName()).equals("1Beacon")) {
                                     Beacon1 = getDistance(result.getTxPower(), result.getRssi());
-//                                    Log.d("BeaconDistance1",""+Beacon1);
-//                                    Log.d("return1", Beacon1+"");
                                 } else if (String.valueOf(result.getDevice().getName()).equals("2Beacon")) {
                                     Beacon2 = getDistance(result.getTxPower(), result.getRssi());
-//                                    Log.d("BeaconDistance2",""+Beacon2);
                                 } else if (String.valueOf(result.getDevice().getName()).equals("3Beacon")) {
                                     Beacon3 = getDistance(result.getTxPower(), result.getRssi());
-//                                    Log.d("BeaconDistance3",""+Beacon3);
                                 }
                                 beacon.clear();
                                 beacon.add(new Beacon(scanResult.getDevice().getAddress(), scanResult.getRssi(), simpleDateFormat.format(new Date())));

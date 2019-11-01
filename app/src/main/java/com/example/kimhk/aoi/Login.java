@@ -46,18 +46,16 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class Login extends AppCompatActivity {
     private SessionCallback callback;
-    public TextView user_nickname, user_email;
+    public TextView user_nickname;
     CircleImageView user_img;
     LinearLayout success_layout;
-    Button logout_btn,mypage;
+    Button logout_btn;
     LoginButton loginButton;
     public static long user_id;
 
     public static Login mrequestLogout; // 메인에서 로그아웃 함수 불러주기 위한 변수
     public static Login sendUserId;
     AQuery aQuery;
-
-    Intent mypage_intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,18 +64,9 @@ public class Login extends AppCompatActivity {
 
         mrequestLogout = this; // 메인에서 로그아웃 함수 불러주기 위한 변수
         sendUserId = this;
-        mypage = (Button) findViewById(R.id.mypage);
         aQuery = new AQuery(this);
         callback = new SessionCallback();
         Session.getCurrentSession().addCallback(callback);
-
-        mypage_intent = new Intent(getApplicationContext(), Mypage.class);
-        mypage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                startActivity(mypage_intent);
-            }
-        });
 
         // 카카오톡 로그인 버튼
         loginButton = (LoginButton) findViewById(R.id.com_kakao_login);
@@ -102,7 +91,6 @@ public class Login extends AppCompatActivity {
         success_layout = (LinearLayout) findViewById(R.id.success_layout);
         user_nickname = (TextView) findViewById(R.id.user_nickname);
         user_img = (CircleImageView) findViewById(R.id.user_img);
-        user_email = (TextView) findViewById(R.id.user_email);
         logout_btn = (Button) findViewById(R.id.logout);
         logout_btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -118,7 +106,6 @@ public class Login extends AppCompatActivity {
         } else {
             success_layout.setVisibility(View.GONE);
             loginButton.setVisibility(View.VISIBLE);
-            mypage.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -192,9 +179,7 @@ public class Login extends AppCompatActivity {
             public void onSuccess(UserProfile userProfile) {
                 Log.e("onSuccess", userProfile.toString());
                 user_nickname.setText(userProfile.getNickname());
-                user_email.setText(userProfile.getEmail());
                 aQuery.id(user_img).image(userProfile.getThumbnailImagePath()); // <- 프로필 작은 이미지 , userProfile.getProfileImagePath() <- 큰 이미지
-
                 user_id = userProfile.getId();
             }
 
@@ -203,7 +188,6 @@ public class Login extends AppCompatActivity {
                 Log.e("onNotSignedUp", "onNotSignedUp");
             }
         });
-//        startActivity(mypage_intent);
     }
 
     @Override

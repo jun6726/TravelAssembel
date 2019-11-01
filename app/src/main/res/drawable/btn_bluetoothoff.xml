@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <item
+        android:bottom="20dp"
+        android:left="20dp"
+        android:right="20dp"
+        android:top="20dp"
+        android:drawable="@drawable/bluetoothoff"
+        tools:ignore="ResourceCycle">
+        <shape
+            android:layout_height="wrap_content"
+            android:shape="oval">
+            <solid android:color="#aaef69" />
+        </shape>
+    </item>
+</layer-list>
