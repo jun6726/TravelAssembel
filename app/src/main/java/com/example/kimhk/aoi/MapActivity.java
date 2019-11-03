@@ -26,6 +26,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,6 +74,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private GoogleMap mMap; // 구글맵변수
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private static final int PLACE_AUTOCOMPLETE_REQUEST_CODE = 1;//검색창 위치 자동완성
+
+    TabHost tabs = Mypage.tabs;
 
     LatLng center;
     CardView cardView;
@@ -122,8 +125,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         int id = item.getItemId();
             if(id ==  R.id.done) {
                 finish();
-            } else if (id == android.R.id.home){
-                finish();
+                tabs.setCurrentTab(0);
             }
             return true;
         }

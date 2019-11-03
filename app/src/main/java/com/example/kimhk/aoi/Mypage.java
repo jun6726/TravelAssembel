@@ -11,10 +11,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -52,10 +54,11 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
     JSONArray trasvels = null;
     ArrayList<HashMap<String, String>> travelArrayList;
 
-    SwipeMenuListView travelList;
+    static SwipeMenuListView travelList;
 
     static TextView tvUserName;
-    TabHost tabs;
+    static TabHost tabs;
+    ListAdapter adapter;
 
     private BluetoothService btService = null;
     private final Handler mHandler = new Handler() {
@@ -87,6 +90,8 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
         tabSpecLogin.setContent(new Intent(this, Login.class));
         tabs.addTab(tabSpecLogin);
 
+        tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#03A9F4"));
+
         tabs.setOnTabChangedListener((TabHost.OnTabChangeListener) this);
 
         if(btService == null){
@@ -94,6 +99,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
         }
 
         tvUserName = (TextView) findViewById(R.id.tvUserName);
+
         travelList = (SwipeMenuListView) findViewById(R.id.Travel_List);
         travelList.setMenuCreator(creator);
         travelList.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
@@ -116,6 +122,8 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 switch (index) {
                     case 0:
                         // open
+                        travelList.removeAllViewsInLayout();
+                        travelList.setAdapter(adapter);
                         break;
                     case 1:
                         // delete
@@ -185,7 +193,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
 
                 travelArrayList.add(persons);
             }
-            ListAdapter adapter = new SimpleAdapter(Mypage.this, travelArrayList, R.layout.list_item,
+            adapter = new SimpleAdapter(Mypage.this, travelArrayList, R.layout.list_item,
                     new String[]{TAG_DATE_START, TAG_DATE_END,TAG_LOCATION}, new int[]{R.id.date_start, R.id.date_end, R.id.Location}
             );
             travelList.setAdapter(adapter);

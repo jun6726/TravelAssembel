@@ -71,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
     final static int BT_CONNECTING_STATUS = 3;
     final static UUID BT_UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB");
 
+    BluetoothSocket mmSocket;
+    InputStream mmInStream;
+    OutputStream mmOutStream;
+
     double Beacon1, Beacon2, Beacon3;
     RssiCal rssiCal;
 
@@ -177,15 +181,35 @@ public class MainActivity extends AppCompatActivity {
                               int return1 = rssiCal.RssiCalcul(Beacon1, Beacon2, Beacon3);
 
                               if(return1 == 1) {
+                                  try {
+                                      mmOutStream.flush();
+                                  } catch (IOException e) {
+                                      e.printStackTrace();
+                                  }
                                   mThreadConnectedBluetooth.write("q");
                                   mTvSendData.setText("직진");
                               } else if (return1 == 2) {
+                                  try {
+                                  mmOutStream.flush();
+                              } catch (IOException e) {
+                                  e.printStackTrace();
+                              }
                                   mThreadConnectedBluetooth.write("e");
                                   mTvSendData.setText("우회전");
                               } else if (return1 == 3) {
+                                  try {
+                                      mmOutStream.flush();
+                                  } catch (IOException e) {
+                                      e.printStackTrace();
+                                  }
                                   mThreadConnectedBluetooth.write("r");
                                   mTvSendData.setText("좌회전");
                               } else if (return1 == 4) {
+                                  try {
+                                      mmOutStream.flush();
+                                  } catch (IOException e) {
+                                      e.printStackTrace();
+                                  }
                                   mThreadConnectedBluetooth.write("t");
                                   mTvSendData.setText("정지");
                               }
@@ -240,6 +264,12 @@ public class MainActivity extends AppCompatActivity {
     void bluetoothOff() {
         if(mBluetoothAdapter.isEnabled()) {
             mBluetoothAdapter.disable();
+            try {
+                mmOutStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
             Toast.makeText(getApplicationContext(), "블루투스가 비활성화 되었습니다.", Toast.LENGTH_SHORT).show();
         }
         else {
@@ -311,10 +341,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     private class ConnectedBluetoothThread extends Thread {
-        private final BluetoothSocket mmSocket;
-        private final InputStream mmInStream;
-        private final OutputStream mmOutStream;
-
         public ConnectedBluetoothThread(BluetoothSocket socket) {
             mmSocket = socket;
             InputStream tmpIn = null;

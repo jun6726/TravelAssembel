@@ -9,7 +9,7 @@ public class RssiCal {
     // q = 1  직진, e = 2 우회전, r = 3 좌회전, t = 4 정지
     public int RssiCalcul (double RssiBeacon1, double RssiBeacon2, double RssiBeacon3) {
         if (RssiBeacon3 != 0.0 && RssiBeacon3 != 1.0E11 && RssiBeacon1 != 1.0E11 && RssiBeacon2 != 1.0E11) {
-            Log.d("RssiCalcul", "\nRssi1 : " + RssiBeacon1 + "\nRssi2 : " + RssiBeacon2 + "\nRssi3 : " + RssiBeacon3);
+            Log.d("RssiCalcul", "\t\nRssi1 : " + RssiBeacon1 + "\nRssi2 : " + RssiBeacon2 + "\nRssi3 : " + RssiBeacon3);
             if (RssiBeacon3 < RssiBeacon1 && RssiBeacon1 < RssiBeacon2) {
                 return r;
             } else if (RssiBeacon1 <= RssiBeacon3 && RssiBeacon3 < RssiBeacon2) {
@@ -19,7 +19,6 @@ public class RssiCal {
             } else if (RssiBeacon2 < RssiBeacon1 && RssiBeacon1 < RssiBeacon3) {
                 return e;
             }
-//            else if (R)
         }
         return q;
     }
