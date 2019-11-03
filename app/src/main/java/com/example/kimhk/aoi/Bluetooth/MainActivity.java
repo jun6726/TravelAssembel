@@ -1,7 +1,6 @@
 package com.example.kimhk.aoi.Bluetooth;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
@@ -75,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
     double Beacon1, Beacon2, Beacon3;
     RssiCal rssiCal;
 
-    @SuppressLint("HandlerLeak")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -328,7 +326,6 @@ public class MainActivity extends AppCompatActivity {
             } catch (IOException e) {
                 Toast.makeText(getApplicationContext(), "소켓 연결 중 오류가 발생했습니다.", Toast.LENGTH_LONG).show();
             }
-            mTvBluetoothStatus.setText("장치 연결됨");
 
             mmInStream = tmpIn;
             mmOutStream = tmpOut;

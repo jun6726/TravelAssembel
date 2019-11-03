@@ -108,10 +108,95 @@ public class AddTravelList extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                travelLocation.setText(continentName[position]);
                 dialog.dismiss();
+                showDialogCountry(AddTravelList.this, position);
             }
         });
+        dialog.show();
+    }
+
+    private void showDialogCountry(final AddTravelList addTravelList, int position) {
+        final Dialog dialog = new Dialog(addTravelList);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.country_dialog);
+
+        ListView listView = (ListView) dialog.findViewById(R.id.listview);
+
+        switch (position){
+            case 0:
+                ArrayAdapter arrayAdapter0 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameAsia);
+                listView.setAdapter(arrayAdapter0);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        travelLocation.setText(countryNameAsia[position]);
+                        dialog.dismiss();
+                    }
+                });
+                break;
+            case 1:
+                ArrayAdapter arrayAdapter1 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameEurope);
+                listView.setAdapter(arrayAdapter1);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        travelLocation.setText(countryNameEurope[position]);
+                        dialog.dismiss();
+                    }
+                });
+                break;
+            case 2:
+                ArrayAdapter arrayAdapter2 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameNorthAmerica);
+                listView.setAdapter(arrayAdapter2);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        travelLocation.setText(countryNameNorthAmerica[position]);
+                        dialog.dismiss();
+                    }
+                });
+                break;
+            case 3:
+                ArrayAdapter arrayAdapter3 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameSouthAmerica);
+                listView.setAdapter(arrayAdapter3);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        travelLocation.setText(countryNameSouthAmerica[position]);
+                        dialog.dismiss();
+                    }
+                });
+                break;
+            case 4:
+                ArrayAdapter arrayAdapter4 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameAfrica);
+                listView.setAdapter(arrayAdapter4);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        travelLocation.setText(countryNameAfrica[position]);
+                        dialog.dismiss();
+                    }
+                });
+                break;
+            case 5:
+                ArrayAdapter arrayAdapter5 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameAustralia);
+                listView.setAdapter(arrayAdapter5);
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                        travelLocation.setText(countryNameAustralia[position]);
+                        dialog.dismiss();
+                    }
+                });
+                break;
+        }
+
         dialog.show();
     }
 
@@ -160,18 +245,14 @@ public class AddTravelList extends AppCompatActivity {
             return null;
         }
     }
-    private String[] continentName = {
-            "아시아",
-            "유럽",
-            "북미",
-            "남미",
-            "북아프리카",
-            "중앙아프리카",
-            "동아프리카",
-            "서아프리카",
-            "남아프리카",
-            "오세아니아"
-    };
+    private String[] continentName = {"아시아", "유럽", "북미", "남미", "아프리카", "오세아니아"};
+    private String[] countryNameAsia = {"대한민국","북한","일본","홍콩","중국", "대만", "인도네시아", "인도", "파키스탄", "라오스", "말레이시아", "미얀마", "필리핀","싱가폴", "태국", "동티모르", "베트남", "스리랑카", "필리핀",};
+    private String[] countryNameEurope = {"오스트리아","벨기에", "덴마크", "잉글랜드", "핀란드","프랑스","독일","그리스","헝가리","아이슬란드", "아일랜드섬", "이탈리아","마케도니아","모나코", "나우루", "네덜란드",
+            "노르웨이","폴란드","루마니아","러시아","슬로바키아","스웨덴","스위스","우크라이나"};
+    private String[] countryNameNorthAmerica = {"미국","캐나다","멕시코","과테말라","그레나다","도미니카 연방","쿠바","벨리즈","바베이도스","자메이카"    };
+    private String[] countryNameSouthAmerica = {"브라질","아르헨티나","에콰도르","파라과이","가나","칠레","베네수엘라"};
+    private String[] countryNameAfrica = {"알제리","콩고","잠비아","토고","소말리아"};
+    private String[] countryNameAustralia = {"뉴질랜드","오스트레일리아","키리바시","파푸아뉴기니","통가","솔로몬제도","사모아","피지","팔라우"};
 }
 
 

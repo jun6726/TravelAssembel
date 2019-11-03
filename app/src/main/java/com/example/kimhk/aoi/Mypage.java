@@ -40,7 +40,7 @@ import java.util.HashMap;
 /**
  * Created by kimhk on 2019-01-19.
  */
-public class Mypage extends TabActivity {
+public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
     String myJSON;
     private static final String TAG_RESULTS = "result";
     private static final String TAG_DATE_START="Date_start";
@@ -55,6 +55,7 @@ public class Mypage extends TabActivity {
     SwipeMenuListView travelList;
 
     static TextView tvUserName;
+    TabHost tabs;
 
     private BluetoothService btService = null;
     private final Handler mHandler = new Handler() {
@@ -69,7 +70,7 @@ public class Mypage extends TabActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
 
-        TabHost tabs = getTabHost();
+        tabs = getTabHost();
         TabHost.TabSpec tabSpecMypage = tabs.newTabSpec("Mypage").setIndicator("",getResources().getDrawable(R.drawable.airplane));
         tabSpecMypage.setContent(R.id.tabMypage);
         tabs.addTab(tabSpecMypage);
@@ -85,6 +86,8 @@ public class Mypage extends TabActivity {
         TabHost.TabSpec tabSpecLogin = tabs.newTabSpec("Login").setIndicator("",getResources().getDrawable(R.drawable.login));
         tabSpecLogin.setContent(new Intent(this, Login.class));
         tabs.addTab(tabSpecLogin);
+
+        tabs.setOnTabChangedListener((TabHost.OnTabChangeListener) this);
 
         if(btService == null){
             btService = new BluetoothService(this,mHandler);
@@ -129,6 +132,8 @@ public class Mypage extends TabActivity {
         travelArrayList = new ArrayList<HashMap<String, String>>();
         getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_list.php"); //수정 필요
     }
+
+
 
     public void getData(String url) {
         class GetDataJSON extends AsyncTask<String, Void, String> {
@@ -223,4 +228,12 @@ public class Mypage extends TabActivity {
             menu.addMenuItem(deleteItem);
         }
     };
+
+    @Override
+    public void onTabChanged(String s) {
+            for(int i=0; i<tabs.getTabWidget().getChildCount(); i++) {
+                tabs.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#CBE0F5"));
+            }
+        tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#03A9F4"));
+    }
 }
