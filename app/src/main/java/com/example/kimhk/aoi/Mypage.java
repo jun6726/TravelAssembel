@@ -73,26 +73,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mypage);
 
-        tabs = getTabHost();
-        TabHost.TabSpec tabSpecMypage = tabs.newTabSpec("Mypage").setIndicator("",getResources().getDrawable(R.drawable.airplane));
-        tabSpecMypage.setContent(R.id.tabMypage);
-        tabs.addTab(tabSpecMypage);
-
-        TabHost.TabSpec tabSpecAddTravel = tabs.newTabSpec("AddTravel").setIndicator("",getResources().getDrawable(R.drawable.memo));
-        tabSpecAddTravel.setContent(new Intent(this, AddTravelList.class));
-        tabs.addTab(tabSpecAddTravel);
-
-        TabHost.TabSpec tabSpecBluetooth = tabs.newTabSpec("Bluetooth").setIndicator("",getResources().getDrawable(R.drawable.carrier));
-        tabSpecBluetooth.setContent(new Intent(this, MainActivity.class));
-        tabs.addTab(tabSpecBluetooth);
-
-        TabHost.TabSpec tabSpecLogin = tabs.newTabSpec("Login").setIndicator("",getResources().getDrawable(R.drawable.login));
-        tabSpecLogin.setContent(new Intent(this, Login.class));
-        tabs.addTab(tabSpecLogin);
-
-        tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#03A9F4"));
-
-        tabs.setOnTabChangedListener((TabHost.OnTabChangeListener) this);
+        TabSetting();
 
         if(btService == null){
             btService = new BluetoothService(this,mHandler);
@@ -141,7 +122,28 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
         getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_list.php"); //수정 필요
     }
 
+    public void TabSetting() {
+        tabs = getTabHost();
+        TabHost.TabSpec tabSpecMypage = tabs.newTabSpec("Mypage").setIndicator("",getResources().getDrawable(R.drawable.airplane));
+        tabSpecMypage.setContent(R.id.tabMypage);
+        tabs.addTab(tabSpecMypage);
 
+        TabHost.TabSpec tabSpecAddTravel = tabs.newTabSpec("AddTravel").setIndicator("",getResources().getDrawable(R.drawable.memo));
+        tabSpecAddTravel.setContent(new Intent(this, AddTravelList.class));
+        tabs.addTab(tabSpecAddTravel);
+
+        TabHost.TabSpec tabSpecBluetooth = tabs.newTabSpec("Bluetooth").setIndicator("",getResources().getDrawable(R.drawable.carrier));
+        tabSpecBluetooth.setContent(new Intent(this, MainActivity.class));
+        tabs.addTab(tabSpecBluetooth);
+
+        TabHost.TabSpec tabSpecLogin = tabs.newTabSpec("Login").setIndicator("",getResources().getDrawable(R.drawable.login));
+        tabSpecLogin.setContent(new Intent(this, Login.class));
+        tabs.addTab(tabSpecLogin);
+
+        tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#03A9F4"));
+
+        tabs.setOnTabChangedListener((TabHost.OnTabChangeListener) this);
+    }
 
     public void getData(String url) {
         class GetDataJSON extends AsyncTask<String, Void, String> {
@@ -243,5 +245,6 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 tabs.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#CBE0F5"));
             }
         tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#03A9F4"));
+
     }
 }

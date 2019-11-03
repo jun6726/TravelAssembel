@@ -78,6 +78,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     TabHost tabs = Mypage.tabs;
 
     LatLng center;
+    double latitude, longitude;
+    LatLng latLng;
     CardView cardView;
     TextView txtLocationAddress;
 
@@ -112,6 +114,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         getLocationPermission();
+
+        final Intent GPSIntent = getIntent();
+        latitude = GPSIntent.getDoubleExtra("lat",latitude);
+        longitude = GPSIntent.getDoubleExtra("long",longitude);
+        latLng = new LatLng(latitude,longitude);
     }
 
     @Override
@@ -223,7 +230,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.addMarker(markerOptions);
     }
 
-
     public boolean onMarkerClick(final Marker marker) {
         AlertDialog.Builder dlg = new AlertDialog.Builder(MapActivity.this);
         dlg.setTitle("마커 위치");
@@ -242,11 +248,11 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
             @Override
             public void onCameraIdle() {
-                center = mMap.getCameraPosition().target;
-                getAddressFromLocation(center.latitude, center.longitude);
+                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),7));
             }
         });
     }
+
     //주소값 얻기
     private void getAddressFromLocation(double latitude, double longitude) {
         Geocoder geocoder = new Geocoder(this, Locale.ENGLISH);
@@ -280,6 +286,10 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    private void initMap(){
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(MapActivity.this);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
@@ -307,8 +317,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onComplete(@NonNull Task task) {
                         if(task.isSuccessful()&&task.getResult()!=null){
                             Location currentLocation = (Location) task.getResult();
-//                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),
-//                                    DEFAULT_ZOOM);
+//                            moveCamera(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()),DEFAULT_ZOOM);
                         }else{
                             Toast.makeText(MapActivity.this, "unable to get current location", Toast.LENGTH_SHORT).show();
                         }
@@ -317,11 +326,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }
         }catch (SecurityException e){
         }
-    }
-
-    private void initMap(){
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(MapActivity.this);
     }
 
     //현재위치 퍼미션

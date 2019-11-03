@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
 import java.io.BufferedReader;
@@ -33,6 +35,7 @@ public class AddTravelList extends AppCompatActivity {
     EditText travelLocation, travelPeriod;
     TravelList_send travelListSend;
     String date_start, date_end;
+    double latitude, longitude;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,9 +81,11 @@ public class AddTravelList extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id ==  R.id.next) {
-            if (date_start == null) {
+            if (travelPeriod == null) {
                 Toast.makeText(AddTravelList.this, "날짜가 선택되지않았습니다.\n'미정' 상태로 설정합니다.\n진행을 원하시면 다음을 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show();
-                date_start = "미정";
+                travelPeriod.setText("미정");
+            } else if (travelLocation == null){
+                Toast.makeText(this, "장소가 선택되지않았습니다.\n'미정'상태로 설정합니다.", Toast.LENGTH_SHORT).show();
                 travelLocation.setText("미정");
             }
             else {
@@ -89,7 +94,11 @@ public class AddTravelList extends AppCompatActivity {
                 travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", String.valueOf(Login.user_id), add_location, date_start, date_end);
 
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
+                add_marker_intent.putExtra("lat",latitude);
+                add_marker_intent.putExtra("long",longitude);
                 startActivity(add_marker_intent);
+                travelLocation.setText("여행 장소를 선택해주세요");
+                travelPeriod.setText("기간을 선택해주세요.");
             }
             return true;
         }
@@ -131,6 +140,8 @@ public class AddTravelList extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         travelLocation.setText(countryNameAsia[position]);
+                        latitude = GPSAsia[position][0];
+                        longitude = GPSAsia[position][1];
                         dialog.dismiss();
                     }
                 });
@@ -143,6 +154,8 @@ public class AddTravelList extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         travelLocation.setText(countryNameEurope[position]);
+                        latitude = GPSAsia[position][0];
+                        longitude = GPSAsia[position][1];
                         dialog.dismiss();
                     }
                 });
@@ -155,6 +168,8 @@ public class AddTravelList extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         travelLocation.setText(countryNameNorthAmerica[position]);
+                        latitude = GPSNorthAmerica[position][0];
+                        longitude = GPSNorthAmerica[position][1];
                         dialog.dismiss();
                     }
                 });
@@ -167,6 +182,8 @@ public class AddTravelList extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         travelLocation.setText(countryNameSouthAmerica[position]);
+                        latitude = GPSSouthAmerica[position][0];
+                        longitude = GPSSouthAmerica[position][1];
                         dialog.dismiss();
                     }
                 });
@@ -179,6 +196,8 @@ public class AddTravelList extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         travelLocation.setText(countryNameAfrica[position]);
+                        latitude = GPSAfrica[position][0];
+                        longitude = GPSAfrica[position][1];
                         dialog.dismiss();
                     }
                 });
@@ -191,6 +210,8 @@ public class AddTravelList extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                         travelLocation.setText(countryNameAustralia[position]);
+                        latitude = GPSAustralia[position][0];
+                        longitude = GPSAustralia[position][1];
                         dialog.dismiss();
                     }
                 });
@@ -246,13 +267,22 @@ public class AddTravelList extends AppCompatActivity {
         }
     }
     private String[] continentName = {"아시아", "유럽", "북미", "남미", "아프리카", "오세아니아"};
-    private String[] countryNameAsia = {"대한민국","북한","일본","홍콩","중국", "대만", "인도네시아", "인도", "파키스탄", "라오스", "말레이시아", "미얀마", "필리핀","싱가폴", "태국", "동티모르", "베트남", "스리랑카", "필리핀",};
+    private String[] countryNameAsia = {"대한민국","북한","일본","홍콩","중국","대만","인도네시아","인도","파키스탄","라오스","말레이시아","미얀마","필리핀","싱가폴","태국","동티모르","베트남","스리랑카"};
     private String[] countryNameEurope = {"오스트리아","벨기에", "덴마크", "잉글랜드", "핀란드","프랑스","독일","그리스","헝가리","아이슬란드", "아일랜드섬", "이탈리아","마케도니아","모나코", "나우루", "네덜란드",
             "노르웨이","폴란드","루마니아","러시아","슬로바키아","스웨덴","스위스","우크라이나"};
-    private String[] countryNameNorthAmerica = {"미국","캐나다","멕시코","과테말라","그레나다","도미니카 연방","쿠바","벨리즈","바베이도스","자메이카"    };
+    private String[] countryNameNorthAmerica = {"미국","캐나다","멕시코","과테말라","그레나다","도미니카 연방","쿠바","벨리즈","바베이도스","자메이카"};
     private String[] countryNameSouthAmerica = {"브라질","아르헨티나","에콰도르","파라과이","가나","칠레","베네수엘라"};
     private String[] countryNameAfrica = {"알제리","콩고","잠비아","토고","소말리아"};
     private String[] countryNameAustralia = {"뉴질랜드","오스트레일리아","키리바시","파푸아뉴기니","통가","솔로몬제도","사모아","피지","팔라우"};
+
+    private double[][] GPSAsia = {{37.56667,126.97806},{39.03306,125.75417}, {35.69722,139.70833}, {22.28056,114.17222}, {39.91389,116.39167}, {25.10000, 121.60000},
+            {-6.20278, 106.84944}, {19.07500, 72.87778}, {33.71833, 73.06028}, {17.96333, 102.61444}, {3.13583,101.68806}, {19.75056,96.10056}, {14.59889,120.98417}, {1.28000, 103.85000}, {13.72917,100.52389},
+            {-8.55000, 125.58333}, {21.03333,105.85000}, {6.88250, 79.90694}};
+    private double[][] GPSEurope = {{}};
+    private double[][] GPSNorthAmerica = {{38.89500, -77.03667}, {45.41694, -75.70000}, {19.43194, -99.13306}, {14.61333,-90.53528}, {12.05278, -61.74944}, {18.46667, -69.95000}, {23.13333, -82.38333}, {17.50472,-88.18667}, {13.10583, -59.61306}, {17.98333,-76.80000}};
+    private double[][] GPSSouthAmerica = {{-15.78083,-47.92917},{-34.60333,-58.38167}, {-2.18333 ,-79.88333}, {-25.28222, -57.63500}, {5.55500,-0.19722}, {-33.46944,-70.64306}, {10.49028, -66.90167}};
+    private double[][] GPSAfrica = {{36.75333,3.04194}, {-4.32500,15.32222}, {-15.40889,28.28722}, {6.13778 ,1.21250}, {2.03333,45.35000}};
+    private double[][] GPSAustralia = {{-41.28889, 174.77722}, {-35.30806,149.12444},{1.44028,173.08056}, {-9.48333,147.19028}, {-21.13306, -175.20028}, {-9.43056, 159.94722}, {-13.83333, -171.75000}, {-18.14167, 178.44194}, {6.90000,134.13333}};
 }
 
 

@@ -71,7 +71,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         mMap = googleMap;
         mGeocoder = new Geocoder(this);
 
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.94, 138.755), 10));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.56667, 126.97806), 10));
 
         setMapMarker();
         initCameraIdle();//카메라 함수
