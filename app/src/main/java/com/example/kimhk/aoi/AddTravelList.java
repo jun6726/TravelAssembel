@@ -4,7 +4,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -28,7 +31,6 @@ import java.net.URL;
 public class AddTravelList extends AppCompatActivity {
     TextView tv, period;
     EditText travelLocation, travelPeriod;
-    Button btnCancle2, btnSubmit2;
     TravelList_send travelListSend;
     String date_start, date_end;
 
@@ -40,8 +42,6 @@ public class AddTravelList extends AppCompatActivity {
         travelLocation = (EditText) findViewById(R.id.travel_location);
         period = (TextView) findViewById(R.id.tv_period);
         travelPeriod = (EditText) findViewById(R.id.travel_Period);
-        btnCancle2 = (Button) findViewById(R.id.btn_Cancle2);
-        btnSubmit2 = (Button) findViewById(R.id.btn_Submit2);
 
         travelLocation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,30 +66,34 @@ public class AddTravelList extends AppCompatActivity {
                 smoothDateRangePickerFragment.show(getFragmentManager(), "Datepickerdialog");
             }
         });
+    }
 
-        btnCancle2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if(id ==  R.id.next) {
+            if (date_start == null) {
+                Toast.makeText(AddTravelList.this, "날짜가 선택되지않았습니다.\n'미정' 상태로 설정합니다.\n진행을 원하시면 다음을 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show();
+                date_start = "미정";
+                travelLocation.setText("미정");
             }
-        });
+            else {
+                String add_location = travelLocation.getText().toString();
+                travelListSend = new TravelList_send();
+                travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", String.valueOf(Login.user_id), add_location, date_start, date_end);
 
-        btnSubmit2.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                if (date_start == null) {
-                    Toast.makeText(AddTravelList.this, "날짜를 입력해주세요.", Toast.LENGTH_SHORT).show();
-                }
-                else {
-                    String add_location = travelLocation.getText().toString();
-                    travelListSend = new TravelList_send();
-                    travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", String.valueOf(Login.user_id), add_location, date_start, date_end);
-
-                    Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
-                    startActivity(add_marker_intent);
-                }
+                Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
+                startActivity(add_marker_intent);
             }
-        });
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void showDialog(final AddTravelList addTravelList) {

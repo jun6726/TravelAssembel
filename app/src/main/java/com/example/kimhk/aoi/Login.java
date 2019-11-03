@@ -181,6 +181,8 @@ public class Login extends AppCompatActivity {
                 user_nickname.setText(userProfile.getNickname());
                 aQuery.id(user_img).image(userProfile.getThumbnailImagePath()); // <- 프로필 작은 이미지 , userProfile.getProfileImagePath() <- 큰 이미지
                 user_id = userProfile.getId();
+
+                Mypage.tvUserName.setText(userProfile.getNickname()+"님의 일정입니다.");
             }
 
             @Override

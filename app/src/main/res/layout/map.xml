@@ -54,12 +54,6 @@
             android:layout_weight="20"
             card_view:context=".MapsActivity" />
 
-        <Button
-            android:id="@+id/plan_submit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="완료" />
     </LinearLayout>
 
 </LinearLayout>

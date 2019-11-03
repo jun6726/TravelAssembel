@@ -10,7 +10,7 @@
         android:id="@+id/tv_country"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        android:background="@color/cast_libraries_material_featurehighlight_outer_highlight_default_color"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:paddingLeft="15dp"
         android:textColor="#fff"

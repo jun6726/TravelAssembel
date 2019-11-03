@@ -36,8 +36,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Login" android:theme="@style/Theme.AppCompat.NoActionBar"/>
-        <activity android:name=".Bluetooth.MainActivity" android:theme="@style/Theme.AppCompat.NoActionBar"/>
+        <activity android:name=".Login"/>
+        <activity android:name=".Bluetooth.MainActivity"/>
         <activity android:name=".AddTravelList"/>
         <activity android:name=".MapActivity" />
         <activity android:name=".ItemSelect"/>

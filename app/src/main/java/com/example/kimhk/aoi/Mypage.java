@@ -54,6 +54,8 @@ public class Mypage extends TabActivity {
 
     SwipeMenuListView travelList;
 
+    static TextView tvUserName;
+
     private BluetoothService btService = null;
     private final Handler mHandler = new Handler() {
         @Override
@@ -88,6 +90,7 @@ public class Mypage extends TabActivity {
             btService = new BluetoothService(this,mHandler);
         }
 
+        tvUserName = (TextView) findViewById(R.id.tvUserName);
         travelList = (SwipeMenuListView) findViewById(R.id.Travel_List);
         travelList.setMenuCreator(creator);
         travelList.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {

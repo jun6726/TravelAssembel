@@ -1,6 +1,7 @@
 package com.example.kimhk.aoi;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -12,11 +13,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
+import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,19 +77,20 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     LatLng center;
     CardView cardView;
     TextView txtLocationAddress;
-    Button plan_submit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
+
+        @SuppressLint("ResourceType") Toolbar mToolbar = (Toolbar) findViewById(R.menu.menu2);
+
         txtLocationAddress = findViewById(R.id.txtLocationAddress);
         txtLocationAddress.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         txtLocationAddress.setSingleLine(true);
         txtLocationAddress.setMarqueeRepeatLimit(-1);
         txtLocationAddress.setSelected(true);
         cardView = findViewById(R.id.cardView);
-        plan_submit = findViewById(R.id.plan_submit);
 
         //카드뷰
         cardView.setOnClickListener(new View.OnClickListener() {
@@ -103,16 +109,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         getLocationPermission();
-
-        plan_submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent finishAB = new Intent(MapActivity.this, Mypage.class);
-                getIntent().addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(finishAB);
-            }
-        });
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu2, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+            if(id ==  R.id.done) {
+                finish();
+            } else if (id == android.R.id.home){
+                finish();
+            }
+            return true;
+        }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
