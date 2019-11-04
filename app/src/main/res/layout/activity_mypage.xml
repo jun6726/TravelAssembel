@@ -55,20 +55,21 @@
                         android:background="@color/colorPrimaryDark"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:id="@+id/tvUserId"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            tools:visibility="gone" />
-
                         <com.baoyz.swipemenulistview.SwipeMenuListView
                             android:id="@+id/Travel_List"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:longClickable="true"
-                            android:verticalScrollbarPosition="right" >
+                            android:verticalScrollbarPosition="right">
 
                         </com.baoyz.swipemenulistview.SwipeMenuListView>
+
+                        <TextView
+                            android:id="@+id/tvUserId"
+                            android:layout_width="1dp"
+                            android:layout_height="1dp"
+                            tools:visibility="gone" />
+
                     </LinearLayout>
                   </LinearLayout>
             </FrameLayout>

@@ -129,7 +129,7 @@ public class Login extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private class SessionCallback implements ISessionCallback {
+    public class SessionCallback implements ISessionCallback {
 
         @Override
         public void onSessionOpened() {
@@ -185,7 +185,7 @@ public class Login extends AppCompatActivity {
                 user_id = userProfile.getId();
 
                 String putUserId = String.valueOf(user_id);
-                Mypage.tvUserId.setText(putUserId);
+                Mypage.tvUserId.setText(putUserId+"");
                 Mypage.tvUserName.setText(userProfile.getNickname()+"님의 일정입니다.");
             }
 

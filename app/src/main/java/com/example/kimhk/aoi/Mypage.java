@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.TabActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageInstaller;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
@@ -28,6 +29,9 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.kimhk.aoi.Bluetooth.MainActivity;
+import com.kakao.auth.ISessionCallback;
+import com.kakao.auth.Session;
+import com.kakao.util.exception.KakaoException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -118,7 +122,6 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 return false;
             }
         });
-
         travelArrayList = new ArrayList<HashMap<String, String>>();
         getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_list.php"); //수정 필요
     }
@@ -246,6 +249,5 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 tabs.getTabWidget().getChildAt(i).setBackgroundColor(Color.parseColor("#CBE0F5"));
             }
         tabs.getTabWidget().getChildAt(tabs.getCurrentTab()).setBackgroundColor(Color.parseColor("#03A9F4"));
-
     }
 }

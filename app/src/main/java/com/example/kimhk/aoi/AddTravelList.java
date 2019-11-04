@@ -89,10 +89,7 @@ public class AddTravelList extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id ==  R.id.next) {
-            if (travelPeriod == null) {
-                Toast.makeText(AddTravelList.this, "날짜가 선택되지않았습니다.\n'미정' 상태로 설정합니다.\n진행을 원하시면 다음을 한번 더 눌러주세요.", Toast.LENGTH_SHORT).show();
-                travelPeriod.setText("미정");
-            } else if (travelLocation == null){
+             if (travelLocation == null){
                 Toast.makeText(this, "장소가 선택되지않았습니다.\n'미정'상태로 설정합니다.", Toast.LENGTH_SHORT).show();
                 travelLocation.setText("미정");
             }
