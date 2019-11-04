@@ -1,0 +1,150 @@
+#include<SoftwareSerial.h>
+int Motor1_DIR = 2;
+int Motor1_PWM = 3;
+int Motor2_DIR = 8;
+int Motor2_PWM = 9;
+char Input;
+
+SoftwareSerial BTSerial(12, 13); // 13 RX, 12 TX
+//SoftwareSerial BeaconSerial1(10, 11); // 11 RX, 10 TX
+//SoftwareSerial BeaconSerial2(6,7);    // 7 RX, 6 TX
+//SoftwareSerial BeaconSerial3(4,5);    // 5 RX, 4 TX
+
+void setup() {
+  int Motor1_DIR = 2;
+  int Motor1_PWM = 3;
+  int Motor2_DIR = 8;
+  int Motor2_PWM = 9;
+  //  pinMode(echo, INPUT);   // echoPin 입력
+  //  pinMode(trig, OUTPUT);  // trigPin 출력
+
+  Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+  BTSerial.begin(9600);//블루투스 사용
+  //  BeaconSerial1.begin(9600);
+  //  BeaconSerial2.begin(9600);
+  //  BeaconSerial3.begin(9600);
+
+  // 모터 제어
+  pinMode(Motor1_DIR, OUTPUT);         // Motor 1 방향설정
+  pinMode(Motor1_PWM, OUTPUT);         // Motor 1 속도설정
+  pinMode(Motor2_DIR, OUTPUT);         // Motor 2 방향설정
+  pinMode(Motor2_PWM, OUTPUT);         // Motor 2 속도설정
+}
+
+void loop() {
+  float duration, distance;
+
+  //  digitalWrite(trig,HIGH);//trig에 5V출력
+  //  delayMicroseconds(100);
+  //  digitalWrite(trig,LOW);//trig에 0V출력
+  //  duration = pulseIn(echo,HIGH);
+  //  distance = ((float)(340*duration)/10000)/2;
+  //  if(Serial.available()){
+  //    BTSerial.write(Serial.read());
+  //  }
+  //  if(BTSerial.available()) {
+  //    Serial.write(BTSerial.read());
+  //  }
+  //  if(!BTSerial.available()) {
+  //    return;
+  //  }
+
+  // test
+  //  BeaconSerial1.listen();
+  //  if(BeaconSerial1.isListening()) {
+  //      while(BeaconSerial1.available()) {
+  //        char inByte = BeaconSerial1.read();
+  //        Serial.write("1");
+  //      }
+  //  }
+  //  BeaconSerial2.listen();
+  //  if (BeaconSerial2.isListening()) {
+  //    while(BeaconSerial2.available()) {
+  //      char inByte = BeaconSerial2.read();
+  //      Serial.write("2");
+  //    }
+  //  }
+  //  BeaconSerial3.listen();
+  //  if (BeaconSerial3.isListening()) {
+  //    while(BeaconSerial3.available()) {
+  //      char inByte = BeaconSerial3.read();
+  //      Serial.write("3");
+  //    }
+  //  }
+
+  BTSerial.listen();
+  if (BTSerial.isListening()) {
+    while (BTSerial.available())
+    {
+      Input = BTSerial.read();
+      Serial.write(Input);
+
+      if (Input == 'q') {
+        Forward();
+      } else if (Input == 'w') {
+        Backward();
+      } else if (Input == 'e') {
+        Right();
+      } else if (Input == 'r') {
+        Left();
+      } else if (Input == 't') {
+        Stop();
+      }
+    }
+  }
+}
+
+void Forward()
+{
+  digitalWrite(Motor1_DIR, HIGH);
+  digitalWrite(Motor1_PWM, 100);
+  digitalWrite(Motor2_DIR, LOW);
+  digitalWrite(Motor2_PWM, 100);
+  Serial.println("Forward");
+}
+void Backward()
+{
+  digitalWrite(Motor1_DIR, LOW);
+  digitalWrite(Motor1_PWM, 100);
+  digitalWrite(Motor2_DIR, HIGH);
+  digitalWrite(Motor2_PWM, 100);
+  Serial.println("Backward");
+}
+void Left()
+{
+  digitalWrite(Motor1_DIR, HIGH);
+  digitalWrite(Motor1_PWM, 0);
+
+  digitalWrite(Motor2_DIR, LOW);
+  digitalWrite(Motor2_PWM, 50);
+  Serial.println("Left");
+  //  delay(1200); // 약 90도 회전
+  //  delay(400);
+  //  Stop();
+}
+
+void Right()
+{
+  digitalWrite(Motor1_DIR, HIGH);
+  digitalWrite(Motor1_PWM, 50);
+
+  digitalWrite(Motor2_DIR, LOW);
+  digitalWrite(Motor2_PWM, 0);
+  Serial.println("Right");
+  //  delay(1200); // 약 90도 회전
+  //  delay(400);
+  //  Stop();
+}
+
+void Stop()
+{
+  digitalWrite(Motor1_DIR, LOW);
+  digitalWrite(Motor1_PWM, 0);
+
+  digitalWrite(Motor2_DIR, LOW);
+  digitalWrite(Motor2_PWM, 0);
+  Serial.println("Stop");
+} 
