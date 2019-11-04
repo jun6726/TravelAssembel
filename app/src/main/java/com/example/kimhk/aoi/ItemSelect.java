@@ -42,9 +42,12 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
     private GoogleMap mMap; // 구글맵변수
     private Geocoder mGeocoder;
     public String getData_position;
+    public Integer getTravelID;
     ArrayList<HashMap<String, String>> arrayList;
 
     LatLng center;
+
+    String putTravelID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,11 +56,12 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 
         final Intent getData_Intent = getIntent();
         getData_position = getData_Intent.getExtras().getString("position");
-
+        getTravelID = getData_Intent.getExtras().getInt("TravelId");
+        putTravelID = String.valueOf(getTravelID);
         arrayList = new ArrayList<HashMap<String, String>>();
 
         Position_send position_send = new Position_send();
-        position_send.execute("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", getData_position);
+        position_send.execute("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);

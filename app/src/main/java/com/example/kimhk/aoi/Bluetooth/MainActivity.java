@@ -143,31 +143,51 @@ public class MainActivity extends AppCompatActivity {
         mBtnUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mThreadConnectedBluetooth.write("q");
-                mTvSendData.setText("직진");
+                if(mThreadConnectedBluetooth == null) {
+                    Toast.makeText(getApplicationContext(), "블루투스 장치와 연결이 되어 있지 않습니다.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mThreadConnectedBluetooth.write("q");
+                    mTvSendData.setText("직진");
+                }
             }
         });
 
         mBtnDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mThreadConnectedBluetooth.write("w");
-                mTvSendData.setText("직진");
+                if(mThreadConnectedBluetooth == null) {
+                    Toast.makeText(getApplicationContext(), "블루투스 장치와 연결이 되어 있지 않습니다.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mThreadConnectedBluetooth.write("w");
+                    mTvSendData.setText("직진");
+                }
             }
         });
         mBtnLeft.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mThreadConnectedBluetooth.write("e");
-                mTvSendData.setText("좌회전");
+                if(mThreadConnectedBluetooth == null) {
+                    Toast.makeText(getApplicationContext(), "블루투스 장치와 연결이 되어 있지 않습니다.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mThreadConnectedBluetooth.write("e");
+                    mTvSendData.setText("좌회전");
+                }
             }
         });
 
         mBtnRight.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mThreadConnectedBluetooth.write("r");
-                mTvSendData.setText("우회전전");
+                if(mThreadConnectedBluetooth == null) {
+                    Toast.makeText(getApplicationContext(), "블루투스 장치와 연결이 되어 있지 않습니다.", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    mThreadConnectedBluetooth.write("r");
+                    mTvSendData.setText("우회전전");
+                }
             }
        });
 

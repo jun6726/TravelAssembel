@@ -52,6 +52,8 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
     private static final String TAG_DATE_START="Date_start";
     private static final String TAG_DATE_END="Date_end";
     private static final String TAG_LOCATION="location";
+    private static final String TAG_TRAVEL_ID="Travel_id";
+
 
     public static Intent Map_intent, Item_select_intent, add_travel_intent;
 
@@ -187,12 +189,14 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
             for (int i = 0; i < trasvels.length(); i++) {
                 JSONObject c = trasvels.getJSONObject(i);
 
+                String travel_id = c.getString(TAG_TRAVEL_ID);
                 String date_start = c.getString(TAG_DATE_START);
                 String date_end = c.getString(TAG_DATE_END);
                 String location = c.getString(TAG_LOCATION);
 
                 HashMap<String, String> persons = new HashMap<String, String>();
 
+                persons.put(TAG_TRAVEL_ID, travel_id);
                 persons.put(TAG_DATE_START, date_start);
                 persons.put(TAG_DATE_END, date_end);
                 persons.put(TAG_LOCATION, location);
@@ -200,7 +204,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 travelArrayList.add(persons);
             }
             adapter = new SimpleAdapter(Mypage.this, travelArrayList, R.layout.list_item,
-                    new String[]{TAG_DATE_START, TAG_DATE_END,TAG_LOCATION}, new int[]{R.id.date_start, R.id.date_end, R.id.Location}
+                    new String[]{ TAG_TRAVEL_ID, TAG_DATE_START, TAG_DATE_END,TAG_LOCATION}, new int[]{R.id.tvTravel_id, R.id.date_start, R.id.date_end, R.id.Location}
             );
             travelList.setAdapter(adapter);
 
@@ -209,6 +213,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     Item_select_intent = new Intent(getApplicationContext(), ItemSelect.class);
                     Item_select_intent.putExtra("position", travelArrayList.get(position).get(TAG_LOCATION));
+                    Item_select_intent.putExtra("TravelId", TAG_TRAVEL_ID);
                     startActivity(Item_select_intent);
                 }
             });
@@ -218,28 +223,27 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
     }
 
     SwipeMenuCreator creator = new SwipeMenuCreator() {
-
         @Override
         public void create(SwipeMenu menu) {
             // create "Modify" item
-            SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
-            openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
-            openItem.setWidth(200);
-            openItem.setTitle("Modi");
-            openItem.setTitleSize(18);
-            openItem.setTitleColor(Color.WHITE);
-            menu.addMenuItem(openItem);
+                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
+                openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
+                openItem.setWidth(200);
+                openItem.setTitle("Modi");
+                openItem.setTitleSize(18);
+                openItem.setTitleColor(Color.WHITE);
+                menu.addMenuItem(openItem);
 
-            // create "delete" item
-            SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
-            deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
-            deleteItem.setWidth(200);
-//            deleteItem.setIcon(R.drawable.del);
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
+                deleteItem.setWidth(200);
+    //            deleteItem.setIcon(R.drawable.del);
 
-            deleteItem.setTitle("Del");
-            deleteItem.setTitleSize(18);
-            deleteItem.setTitleColor(Color.WHITE);
-            menu.addMenuItem(deleteItem);
+                deleteItem.setTitle("Del");
+                deleteItem.setTitleSize(18);
+                deleteItem.setTitleColor(Color.WHITE);
+                menu.addMenuItem(deleteItem);
         }
     };
 

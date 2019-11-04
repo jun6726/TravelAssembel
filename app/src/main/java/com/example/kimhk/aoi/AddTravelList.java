@@ -1,28 +1,20 @@
 package com.example.kimhk.aoi;
 
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 
 import java.io.BufferedReader;
@@ -33,7 +25,6 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collections;
 
 public class AddTravelList extends AppCompatActivity {
     TextView tv;
@@ -45,11 +36,13 @@ public class AddTravelList extends AppCompatActivity {
     String date_start, date_end;
     double latitude, longitude;
 
+    ItemSelect itemSelect;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.add_travel_list);
 
-        tv = (TextView) findViewById(R.id.tv);
+        tv = (TextView) findViewById(R.id.tvTravel_id);
         travelLocation = (EditText) findViewById(R.id.travel_location);
         period = (TextView) findViewById(R.id.tv_period);
         travelPeriod = (EditText) findViewById(R.id.travel_Period);
@@ -99,6 +92,7 @@ public class AddTravelList extends AppCompatActivity {
                 travelListSend = new TravelList_send();
                 travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", getUserId, add_location, date_start, date_end);
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
+
                 add_marker_intent.putExtra("lat",latitude);
                 add_marker_intent.putExtra("long",longitude);
                 startActivity(add_marker_intent);
@@ -116,7 +110,7 @@ public class AddTravelList extends AppCompatActivity {
         dialog.setContentView(R.layout.country_dialog);
 
         ListView listView = (ListView) dialog.findViewById(R.id.listview);
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, continentName);
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, continentName);
         listView.setAdapter(arrayAdapter);
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -138,7 +132,7 @@ public class AddTravelList extends AppCompatActivity {
 
         switch (position){
             case 0:
-                ArrayAdapter arrayAdapter0 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameAsia);
+                ArrayAdapter arrayAdapter0 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameAsia);
                 listView.setAdapter(arrayAdapter0);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -152,7 +146,7 @@ public class AddTravelList extends AppCompatActivity {
                 });
                 break;
             case 1:
-                ArrayAdapter arrayAdapter1 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameEurope);
+                ArrayAdapter arrayAdapter1 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameEurope);
                 listView.setAdapter(arrayAdapter1);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -166,7 +160,7 @@ public class AddTravelList extends AppCompatActivity {
                 });
                 break;
             case 2:
-                ArrayAdapter arrayAdapter2 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameNorthAmerica);
+                ArrayAdapter arrayAdapter2 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameNorthAmerica);
                 listView.setAdapter(arrayAdapter2);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -180,7 +174,7 @@ public class AddTravelList extends AppCompatActivity {
                 });
                 break;
             case 3:
-                ArrayAdapter arrayAdapter3 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameSouthAmerica);
+                ArrayAdapter arrayAdapter3 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameSouthAmerica);
                 listView.setAdapter(arrayAdapter3);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -194,7 +188,7 @@ public class AddTravelList extends AppCompatActivity {
                 });
                 break;
             case 4:
-                ArrayAdapter arrayAdapter4 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameAfrica);
+                ArrayAdapter arrayAdapter4 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameAfrica);
                 listView.setAdapter(arrayAdapter4);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -208,7 +202,7 @@ public class AddTravelList extends AppCompatActivity {
                 });
                 break;
             case 5:
-                ArrayAdapter arrayAdapter5 = new ArrayAdapter(this, R.layout.continent_item, R.id.tv, countryNameAustralia);
+                ArrayAdapter arrayAdapter5 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameAustralia);
                 listView.setAdapter(arrayAdapter5);
 
                 listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
