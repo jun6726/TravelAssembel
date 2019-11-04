@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +36,7 @@ public class AddTravelList extends AppCompatActivity {
     TravelList_send travelListSend;
     String date_start, date_end;
     double latitude, longitude;
-
-    ItemSelect itemSelect;
+    double getTravelId;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +53,6 @@ public class AddTravelList extends AppCompatActivity {
                 showDialog(AddTravelList.this);
             }
         });
-
         travelPeriod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -82,22 +81,30 @@ public class AddTravelList extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if(id ==  R.id.next) {
-             if (travelLocation == null){
-                Toast.makeText(this, "장소가 선택되지않았습니다.\n'미정'상태로 설정합니다.", Toast.LENGTH_SHORT).show();
-                travelLocation.setText("미정");
-            }
-            else {
+            String hint = "여행 장소를 선택해주세요", hint2="미정";
+             if (travelLocation.getHint().equals(hint) && travelLocation.getText()==null){
+                 travelLocation.setHint(hint2);
+                 Toast.makeText(this, "장소가 선택되지않았습니다.\n'미정'상태로 설정합니다.", Toast.LENGTH_SHORT).show();
+            } else {
                 String add_location = travelLocation.getText().toString();
                 getUserId = Mypage.tvUserId.getText().toString();
                 travelListSend = new TravelList_send();
                 travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", getUserId, add_location, date_start, date_end);
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
 
+                int random = (int) ((Math.random()*10));
+                if(travelLocation.getHint().equals(hint2)) {
+                    latitude = GPSAsia[random][0];
+                    longitude = GPSAsia[random][1];
+                }
+                add_marker_intent.putExtra("TravelID",getTravelId);
                 add_marker_intent.putExtra("lat",latitude);
                 add_marker_intent.putExtra("long",longitude);
                 startActivity(add_marker_intent);
-                travelLocation.setText("여행 장소를 선택해주세요");
-                travelPeriod.setText("기간을 선택해주세요.");
+                travelLocation.setHint("여행 장소를 선택해주세요");
+                travelLocation.setText("");
+                travelPeriod.setHint("기간을 선택해주세요.");
+                travelPeriod.setText("");
             }
             return true;
         }
@@ -221,7 +228,6 @@ public class AddTravelList extends AppCompatActivity {
     }
 
     private class TravelList_send extends AsyncTask<String, Void, String>{
-
         @Override
         protected String doInBackground(String... params) {
             String serverURL = (String) params[0];
@@ -256,7 +262,8 @@ public class AddTravelList extends AppCompatActivity {
                     sb.append(line);
                 }
                 bufferedReader.close();
-                return sb.toString();
+                getTravelId = Double.parseDouble(sb.toString());
+                return String.valueOf(getTravelId);
             }catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -265,6 +272,7 @@ public class AddTravelList extends AppCompatActivity {
             return null;
         }
     }
+
     private String[] continentName = {"아시아", "유럽", "북미", "남미", "아프리카", "오세아니아"};
     private String[] countryNameAsia = {"대한민국","북한","일본","홍콩","중국","대만","인도네시아","인도","파키스탄","라오스","말레이시아","미얀마","필리핀","싱가폴","태국","동티모르","베트남","스리랑카"};
     private String[] countryNameEurope = {"오스트리아","벨기에", "덴마크", "잉글랜드", "핀란드","프랑스","독일","그리스","헝가리","아이슬란드", "아일랜드섬", "이탈리아","마케도니아","모나코", "나우루", "네덜란드",
@@ -276,14 +284,14 @@ public class AddTravelList extends AppCompatActivity {
 
     private int[] Africa = {R.drawable.africa_algeri, R.drawable.africa_congo, R.drawable.africa_zambia, R.drawable.africa_togo, R.drawable.africa_somalia};
 
-    private double[][] GPSAsia = {{37.56667,126.97806},{39.03306,125.75417}, {35.69722,139.70833}, {22.28056,114.17222}, {39.91389,116.39167}, {25.10000, 121.60000},
+    static double[][] GPSAsia = {{37.56667,126.97806},{39.03306,125.75417}, {35.69722,139.70833}, {22.28056,114.17222}, {39.91389,116.39167}, {25.10000, 121.60000},
             {-6.20278, 106.84944}, {19.07500, 72.87778}, {33.71833, 73.06028}, {17.96333, 102.61444}, {3.13583,101.68806}, {19.75056,96.10056}, {14.59889,120.98417}, {1.28000, 103.85000}, {13.72917,100.52389},
             {-8.55000, 125.58333}, {21.03333,105.85000}, {6.88250, 79.90694}};
-    private double[][] GPSEurope = {{}};
-    private double[][] GPSNorthAmerica = {{38.89500, -77.03667}, {45.41694, -75.70000}, {19.43194, -99.13306}, {14.61333,-90.53528}, {12.05278, -61.74944}, {18.46667, -69.95000}, {23.13333, -82.38333}, {17.50472,-88.18667}, {13.10583, -59.61306}, {17.98333,-76.80000}};
-    private double[][] GPSSouthAmerica = {{-15.78083,-47.92917},{-34.60333,-58.38167}, {-2.18333 ,-79.88333}, {-25.28222, -57.63500}, {5.55500,-0.19722}, {-33.46944,-70.64306}, {10.49028, -66.90167}};
-    private double[][] GPSAfrica = {{36.75333,3.04194}, {-4.32500,15.32222}, {-15.40889,28.28722}, {6.13778 ,1.21250}, {2.03333,45.35000}};
-    private double[][] GPSAustralia = {{-41.28889, 174.77722}, {-35.30806,149.12444},{1.44028,173.08056}, {-9.48333,147.19028}, {-21.13306, -175.20028}, {-9.43056, 159.94722}, {-13.83333, -171.75000}, {-18.14167, 178.44194}, {6.90000,134.13333}};
+    double[][] GPSEurope = {{}};
+    double[][] GPSNorthAmerica = {{38.89500, -77.03667}, {45.41694, -75.70000}, {19.43194, -99.13306}, {14.61333,-90.53528}, {12.05278, -61.74944}, {18.46667, -69.95000}, {23.13333, -82.38333}, {17.50472,-88.18667}, {13.10583, -59.61306}, {17.98333,-76.80000}};
+    double[][] GPSSouthAmerica = {{-15.78083,-47.92917},{-34.60333,-58.38167}, {-2.18333 ,-79.88333}, {-25.28222, -57.63500}, {5.55500,-0.19722}, {-33.46944,-70.64306}, {10.49028, -66.90167}};
+    double[][] GPSAfrica = {{36.75333,3.04194}, {-4.32500,15.32222}, {-15.40889,28.28722}, {6.13778 ,1.21250}, {2.03333,45.35000}};
+    double[][] GPSAustralia = {{-41.28889, 174.77722}, {-35.30806,149.12444},{1.44028,173.08056}, {-9.48333,147.19028}, {-21.13306, -175.20028}, {-9.43056, 159.94722}, {-13.83333, -171.75000}, {-18.14167, 178.44194}, {6.90000,134.13333}};
 }
 
 

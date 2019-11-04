@@ -20,6 +20,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -77,8 +78,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     TabHost tabs = Mypage.tabs;
 
-    LatLng center;
-    double latitude, longitude;
+    double latitude=37.00, longitude=128.00, TravelID;
     LatLng latLng;
     CardView cardView;
     TextView txtLocationAddress;
@@ -115,7 +115,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
         getLocationPermission();
 
-        final Intent GPSIntent = getIntent();
+        Intent GPSIntent = getIntent();
+        TravelID = GPSIntent.getDoubleExtra("TravelID", TravelID);
         latitude = GPSIntent.getDoubleExtra("lat",latitude);
         longitude = GPSIntent.getDoubleExtra("long",longitude);
         latLng = new LatLng(latitude,longitude);
@@ -142,7 +143,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         mGeocoder = new Geocoder(this);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude,longitude),7));
-
         mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(final LatLng latLng) {
@@ -154,13 +154,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 final EditText ev_Expense = new EditText(MapActivity.this);
                 ev_Expense.setInputType(InputType.TYPE_CLASS_NUMBER);
                 addMarker_dialog.setView(ev_Expense);
-
                 addMarker_dialog.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String Expense = ev_Expense.getText().toString();
                         Addmarker addmarker = new Addmarker();
-                        addmarker.execute("http://jun6726.cafe24.com/php_folder/add_folder/Marker_add.php", Expense, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude) );
+                        addmarker.execute("http://jun6726.cafe24.com/php_folder/add_folder/Marker_add.php", String.valueOf(TravelID), Expense, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude) );
                         addMarker(latLng);
                     }
                 });
@@ -182,11 +181,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         @Override
         protected String doInBackground(String... params) {
             String serverURL = (String)params[0];
-            String Expense = (String)params[1];
-            String Latitude = (String)params[2];
-            String Longitude = (String)params[3];
+            String TravelID = (String)params[1];
+            String Expense = (String)params[2];
+            String Latitude = (String)params[3];
+            String Longitude = (String)params[4];
 
-            String postParameters = "&Expense=" + Expense +"&Latitude=" + Latitude + "&Longitude=" + Longitude;
+            String postParameters = "&TravelID="+TravelID+"&Expense=" + Expense +"&Latitude=" + Latitude + "&Longitude=" + Longitude;
 
             try{
                 URL url = new URL(serverURL);
@@ -287,10 +287,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    //지도 초기화
     private void initMap(){
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(MapActivity.this);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == PLACE_AUTOCOMPLETE_REQUEST_CODE) {
@@ -307,6 +309,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             }}
     }
 
+    // 스마트폰 위치 얻기
     private void getDeviceLocation(){
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 

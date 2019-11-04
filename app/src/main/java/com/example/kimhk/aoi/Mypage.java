@@ -166,6 +166,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                     while ((json = bufferedReader.readLine()) != null) {
                         sb.append(json + "\n");
                     }
+
                     return sb.toString().trim();
                 } catch (Exception e) {
                     return null; // cleartext IOException 발생, 매니패스트 애플리케이션부에 android:usesCleartextTraffic="true"으로 해결
