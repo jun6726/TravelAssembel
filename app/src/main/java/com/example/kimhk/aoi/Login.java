@@ -6,6 +6,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.renderscript.Element;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.androidquery.AQuery;
+import com.google.android.gms.fitness.result.DataTypeResult;
 import com.kakao.auth.ISessionCallback;
 import com.kakao.auth.Session;
 import com.kakao.network.ErrorResult;
@@ -182,6 +184,8 @@ public class Login extends AppCompatActivity {
                 aQuery.id(user_img).image(userProfile.getThumbnailImagePath()); // <- 프로필 작은 이미지 , userProfile.getProfileImagePath() <- 큰 이미지
                 user_id = userProfile.getId();
 
+                String putUserId = String.valueOf(user_id);
+                Mypage.tvUserId.setText(putUserId);
                 Mypage.tvUserName.setText(userProfile.getNickname()+"님의 일정입니다.");
             }
 

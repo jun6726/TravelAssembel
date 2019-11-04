@@ -56,7 +56,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
 
     static SwipeMenuListView travelList;
 
-    static TextView tvUserName;
+    static TextView tvUserName,tvUserId;
     static TabHost tabs;
     ListAdapter adapter;
 
@@ -80,6 +80,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
         }
 
         tvUserName = (TextView) findViewById(R.id.tvUserName);
+        tvUserId = (TextView) findViewById(R.id.tvUserId);
 
         travelList = (SwipeMenuListView) findViewById(R.id.Travel_List);
         travelList.setMenuCreator(creator);

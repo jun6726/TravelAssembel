@@ -1,9 +1,12 @@
 package com.example.kimhk.aoi;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -14,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,9 +33,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 
 public class AddTravelList extends AppCompatActivity {
-    TextView tv, period;
+    TextView tv;
+    TextView period;
+
+    String getUserId;
     EditText travelLocation, travelPeriod;
     TravelList_send travelListSend;
     String date_start, date_end;
@@ -90,9 +98,9 @@ public class AddTravelList extends AppCompatActivity {
             }
             else {
                 String add_location = travelLocation.getText().toString();
+                getUserId = Mypage.tvUserId.getText().toString();
                 travelListSend = new TravelList_send();
-                travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", String.valueOf(Login.user_id), add_location, date_start, date_end);
-
+                travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", getUserId, add_location, date_start, date_end);
                 Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
                 add_marker_intent.putExtra("lat",latitude);
                 add_marker_intent.putExtra("long",longitude);
@@ -274,6 +282,8 @@ public class AddTravelList extends AppCompatActivity {
     private String[] countryNameSouthAmerica = {"브라질","아르헨티나","에콰도르","파라과이","가나","칠레","베네수엘라"};
     private String[] countryNameAfrica = {"알제리","콩고","잠비아","토고","소말리아"};
     private String[] countryNameAustralia = {"뉴질랜드","오스트레일리아","키리바시","파푸아뉴기니","통가","솔로몬제도","사모아","피지","팔라우"};
+
+    private int[] Africa = {R.drawable.africa_algeri, R.drawable.africa_congo, R.drawable.africa_zambia, R.drawable.africa_togo, R.drawable.africa_somalia};
 
     private double[][] GPSAsia = {{37.56667,126.97806},{39.03306,125.75417}, {35.69722,139.70833}, {22.28056,114.17222}, {39.91389,116.39167}, {25.10000, 121.60000},
             {-6.20278, 106.84944}, {19.07500, 72.87778}, {33.71833, 73.06028}, {17.96333, 102.61444}, {3.13583,101.68806}, {19.75056,96.10056}, {14.59889,120.98417}, {1.28000, 103.85000}, {13.72917,100.52389},

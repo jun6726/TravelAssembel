@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     ScanFilter.Builder scanFilter = new ScanFilter.Builder();
     SimpleDateFormat simpleDateFormat = new SimpleDateFormat("HH:mm:ss", Locale.KOREAN);
     TextView mTvBluetoothStatus, mTvReceiveData, mTvSendData;
-    Button mBtnBluetoothConnect, mBtnBluetoothDisconnect, mBtnSendData, mBtnStop;
+    Button mBtnBluetoothConnect, mBtnBluetoothDisconnect, mBtnSendData, mBtnStop, mBtnUp, mBtnDown,mBtnLeft, mBtnRight;
 
     Set<BluetoothDevice> mPairedDevices;
     List<String> mListPairedDevices;
@@ -89,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
         mBtnBluetoothConnect = (Button)findViewById(R.id.btnBluetoothOn);
         mBtnBluetoothDisconnect = (Button)findViewById(R.id.btnBluetoothOff);
         mBtnSendData = (Button)findViewById(R.id.btnSendData);
+        mBtnUp = (Button) findViewById(R.id.btnUp);
+        mBtnDown = (Button) findViewById(R.id.btnDown);
+        mBtnLeft = (Button) findViewById(R.id.btnLeft);
+        mBtnRight = (Button) findViewById(R.id.btnRight);
 
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         mBluetoothLeScanner = mBluetoothAdapter.getBluetoothLeScanner();
@@ -135,6 +139,38 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        mBtnUp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mThreadConnectedBluetooth.write("q");
+                mTvSendData.setText("직진");
+            }
+        });
+
+        mBtnDown.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mThreadConnectedBluetooth.write("w");
+                mTvSendData.setText("직진");
+            }
+        });
+        mBtnLeft.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mThreadConnectedBluetooth.write("e");
+                mTvSendData.setText("좌회전");
+            }
+        });
+
+        mBtnRight.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mThreadConnectedBluetooth.write("r");
+                mTvSendData.setText("우회전전");
+            }
+       });
+
         mBluetoothHandler = new Handler(){
             public void handleMessage(android.os.Message msg){
                 if(msg.what == BT_MESSAGE_READ){

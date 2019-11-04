@@ -45,8 +45,6 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
     ArrayList<HashMap<String, String>> arrayList;
 
     LatLng center;
-    int markernumber = 1;
-    String str_markernumer = String.valueOf(markernumber);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -160,14 +158,11 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 
                 double load_lat = Double.parseDouble(marker_lat);
                 double load_long = Double.parseDouble(marker_long);
-
-//                markerList.add(new MarkerItem(load_lat,load_long, markernumber));
                 markerList.add(new MarkerItem(load_lat,load_long));
             }
 
             for (MarkerItem markerItem : markerList) {
                 addMarker(markerItem, true);
-//                markernumber++;
             }
         } catch (JSONException e) {
             e.printStackTrace();
