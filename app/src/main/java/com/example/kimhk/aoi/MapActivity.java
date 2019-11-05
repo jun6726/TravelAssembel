@@ -78,18 +78,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     TabHost tabs = Mypage.tabs;
 
-    double latitude=37.00, longitude=128.00, TravelID;
+    double latitude=37.00, longitude=128.00;
+    String TravelID;
     LatLng latLng;
     CardView cardView;
     TextView txtLocationAddress;
+    Intent GPSIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.map);
 
-        @SuppressLint("ResourceType") Toolbar mToolbar = (Toolbar) findViewById(R.menu.menu2);
+        GPSIntent = getIntent();
+        TravelID = GPSIntent.getStringExtra("TravelID");
+        latitude = GPSIntent.getDoubleExtra("lat",latitude);
+        longitude = GPSIntent.getDoubleExtra("long",longitude);
+        latLng = new LatLng(latitude,longitude);
 
+        @SuppressLint("ResourceType") Toolbar mToolbar = (Toolbar) findViewById(R.menu.menu2);
         txtLocationAddress = findViewById(R.id.txtLocationAddress);
         txtLocationAddress.setEllipsize(TextUtils.TruncateAt.MARQUEE);
         txtLocationAddress.setSingleLine(true);
@@ -112,14 +119,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         getLocationPermission();
-
-        Intent GPSIntent = getIntent();
-        TravelID = GPSIntent.getDoubleExtra("TravelID", TravelID);
-        latitude = GPSIntent.getDoubleExtra("lat",latitude);
-        longitude = GPSIntent.getDoubleExtra("long",longitude);
-        latLng = new LatLng(latitude,longitude);
     }
 
     @Override

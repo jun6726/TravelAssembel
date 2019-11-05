@@ -36,7 +36,9 @@ public class AddTravelList extends AppCompatActivity {
     TravelList_send travelListSend;
     String date_start, date_end;
     double latitude, longitude;
-    double getTravelId;
+    String getTravelId;
+
+    Intent add_marker_intent;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,14 +92,14 @@ public class AddTravelList extends AppCompatActivity {
                 getUserId = Mypage.tvUserId.getText().toString();
                 travelListSend = new TravelList_send();
                 travelListSend.execute("http://jun6726.cafe24.com/php_folder/add_folder/Travel_add.php", getUserId, add_location, date_start, date_end);
-                Intent add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
+                add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
 
                 int random = (int) ((Math.random()*10));
                 if(travelLocation.getHint().equals(hint2)) {
                     latitude = GPSAsia[random][0];
                     longitude = GPSAsia[random][1];
                 }
-                add_marker_intent.putExtra("TravelID",getTravelId);
+                add_marker_intent.putExtra("TravelID", getTravelId);
                 add_marker_intent.putExtra("lat",latitude);
                 add_marker_intent.putExtra("long",longitude);
                 startActivity(add_marker_intent);
@@ -262,8 +264,9 @@ public class AddTravelList extends AppCompatActivity {
                     sb.append(line);
                 }
                 bufferedReader.close();
-                getTravelId = Double.parseDouble(sb.toString());
-                return String.valueOf(getTravelId);
+                getTravelId = sb.toString();
+                Log.d("bufferReaderTravelID", getTravelId);
+                return getTravelId;
             }catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {

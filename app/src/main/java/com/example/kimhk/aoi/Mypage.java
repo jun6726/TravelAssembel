@@ -39,6 +39,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
     static TabHost tabs;
     ListAdapter adapter;
 
+    String PutUserID;
+
     private BluetoothService btService = null;
     private final Handler mHandler = new Handler() {
         @Override
@@ -87,6 +90,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
 
         tvUserName = (TextView) findViewById(R.id.tvUserName);
         tvUserId = (TextView) findViewById(R.id.tvUserId);
+        PutUserID = tvUserId.getText().toString();
 
         travelList = (SwipeMenuListView) findViewById(R.id.Travel_List);
         travelList.setMenuCreator(creator);
@@ -104,6 +108,8 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 travelList.smoothOpenMenu(position);
             }
         });
+
+        PutUserID = tvUserId.getText().toString();
         travelList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
@@ -156,10 +162,23 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
             @Override
             protected String doInBackground(String... params) {
                 String uri = params[0];
+//                String UserID = params[1];
+
+//                String parameters = "&UserID=" + UserID;
+
                 BufferedReader bufferedReader = null;
                 try {
                     URL url = new URL(uri);
                     HttpURLConnection con = (HttpURLConnection) url.openConnection();
+
+                    con.setRequestMethod("POST");
+                    con.connect();
+
+                    OutputStream outputStream = con.getOutputStream();
+//                    outputStream.write(parameters.getBytes("UTF-8"));
+                    outputStream.flush();
+                    outputStream.close();
+
                     StringBuilder sb = new StringBuilder();
                     bufferedReader = new BufferedReader(new InputStreamReader(con.getInputStream()));
                     String json;

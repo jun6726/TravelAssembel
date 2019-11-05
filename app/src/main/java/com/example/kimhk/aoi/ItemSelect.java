@@ -5,9 +5,12 @@ import android.content.Intent;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.SimpleAdapter;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,7 +33,6 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,32 +40,37 @@ import java.util.HashMap;
  * Created by YEON on 2019-02-02.
  */
 public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback , GoogleMap.OnMarkerClickListener {
-
     private GoogleMap mMap; // 구글맵변수
     private Geocoder mGeocoder;
     public String getData_position;
     public Integer getTravelID;
-    ArrayList<HashMap<String, String>> arrayList;
+    ArrayList<HashMap<String, String>> MarkerarrayList;
+    public ArrayList<MarkerItem> markerList = new ArrayList();
+
+    private static final String TAG_MARKER = "result";
+    private static final String TAG_MARKER_LAT = "marker_lat";
+    private static final String TAG_MARKER_LONG = "marker_long";
+
+    JSONArray markers = null;
+    String marker = null;
 
     LatLng center;
-
     String putTravelID;
+    Intent getData_Intent;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.list_item_selected);
 
-        final Intent getData_Intent = getIntent();
-        getData_position = getData_Intent.getExtras().getString("position");
-        getTravelID = getData_Intent.getExtras().getInt("TravelId");
+        getData_Intent = getIntent();
+        getTravelID = getData_Intent.getExtras().getInt("TravelID");
         putTravelID = String.valueOf(getTravelID);
-        arrayList = new ArrayList<HashMap<String, String>>();
+        MarkerarrayList = new ArrayList<HashMap<String, String>>();
 
-        Position_send position_send = new Position_send();
-        position_send.execute("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
+//        Position_send position_send = new Position_send();
+//        position_send.execute("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
 
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
@@ -75,33 +82,21 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.56667, 126.97806), 10));
 
-        setMapMarker();
+//        load_marker();
         initCameraIdle();//카메라 함수
     }
 
-    public ArrayList<MarkerItem> markerList = new ArrayList();
-
-
-    public void setMapMarker() {
-        getData("http://jun6726.cafe24.com/php_folder/test_folder/marker_test.php",getData_position);
+    //카메라 함수
+    private void initCameraIdle() {
+        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
+            @Override
+            public void onCameraIdle() {
+                center = mMap.getCameraPosition().target;
+            }
+        });
     }
 
-    // Marking lat. long. on the GoogleMaps
-    private Marker addMarker(MarkerItem markerItem, boolean isSelectedMarker) {
-        LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
-
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(new LatLng(position.latitude, position.longitude));
-
-        return mMap.addMarker(markerOptions);
-    }
-
-    JSONArray markers = null;
-    private static final String TAG_MARKER = "result";
-    private static final String TAG_MARKER_LAT = "marker_lat";
-    private static final String TAG_MARKER_LONG = "marker_long";
-    String markerjson = null;
-
+    //데이터 가져오기 php
     public void getData(String url, String getData_position) {
         class GetDataJSON extends AsyncTask<String, Void, String> {
             @Override
@@ -136,17 +131,20 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
             }
             @Override
             public void onPostExecute(String result) {
-                markerjson = result;
-                load_marker();
+                marker = result;
+//                load_marker();
             }
         }
         GetDataJSON g = new GetDataJSON();
         g.execute(url);
     }
 
+    // 마커 로드
     public void load_marker() {
         try {
-            JSONObject jsonObj = new JSONObject(markerjson);
+            getData("http://jun6726.cafe24.com/php_folder/test_folder/marker_test.php",getData_position);
+
+            JSONObject jsonObj = new JSONObject(marker);
             markers = jsonObj.getJSONArray(TAG_MARKER);
 
             for (int i = 0; i < markers.length(); i++) {
@@ -173,9 +171,17 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         }
     }
 
+    // Marking lat. long. on the GoogleMaps
+    private Marker addMarker(MarkerItem markerItem, boolean isSelectedMarker) {
+        LatLng position = new LatLng(markerItem.getLat(), markerItem.getLon());
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.position(new LatLng(position.latitude, position.longitude));
+
+        return mMap.addMarker(markerOptions);
+    }
+
     public boolean onMarkerClick(final Marker marker) {
         AlertDialog.Builder dlg = new AlertDialog.Builder(ItemSelect.this);
-        dlg.setTitle("마커 위치");
         dlg.setNegativeButton("마커 삭제", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -184,66 +190,5 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
         });
         dlg.show();
         return true;
-    }
-
-    //카메라 함수
-    private void initCameraIdle() {
-        mMap.setOnCameraIdleListener(new GoogleMap.OnCameraIdleListener() {
-            @Override
-            public void onCameraIdle() {
-                center = mMap.getCameraPosition().target;
-            }
-        });
-    }
-
-    public class Position_send extends AsyncTask<String, Void, String>
-    {
-        @Override
-        public String doInBackground(String... params) {
-
-            String URL = (String) params[0];
-            String position = (String) params[1];
-            String parameter = "&position=" + position;
-
-            try{
-                URL url = new URL(URL);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-                httpURLConnection.setReadTimeout(5000);
-                httpURLConnection.setConnectTimeout(5000);
-                httpURLConnection.setDoOutput(true);
-                httpURLConnection.setDoInput(true);
-                httpURLConnection.setRequestMethod("POST");
-                httpURLConnection.connect();
-
-                OutputStream outputStream = httpURLConnection.getOutputStream();
-                outputStream.write(parameter.getBytes("UTF-8"));
-                outputStream.flush();
-                outputStream.close();
-
-                InputStream inputStream;
-                inputStream = httpURLConnection.getInputStream();
-
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "UTF-8");
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-
-                StringBuilder sb = new StringBuilder();
-                String line = null;
-
-                while((line = bufferedReader.readLine()) != null){
-                    sb.append(line);
-                }
-                bufferedReader.close();
-
-                return sb.toString();
-
-            } catch (ProtocolException e) {
-                e.printStackTrace();
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
     }
 }
