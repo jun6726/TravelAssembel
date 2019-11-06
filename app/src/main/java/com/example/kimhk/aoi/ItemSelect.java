@@ -55,8 +55,8 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
     String marker = null;
 
     LatLng center;
-    String putTravelID;
     Intent getData_Intent;
+    String putTravelID, UserID;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,11 +65,14 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 
         getData_Intent = getIntent();
         getTravelID = getData_Intent.getExtras().getInt("TravelID");
+        UserID = getData_Intent.getExtras().getString("UserID");
         putTravelID = String.valueOf(getTravelID);
         MarkerarrayList = new ArrayList<HashMap<String, String>>();
 
 //        Position_send position_send = new Position_send();
 //        position_send.execute("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
+
+        getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -97,13 +100,13 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
     }
 
     //데이터 가져오기 php
-    public void getData(String url, String getData_position) {
+    public void getData(String url, String putTravelID) {
         class GetDataJSON extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
                 String uri = params[0];
-//                String getData_position = params[1];
-//                String parameters = "&position=" + getData_position;
+                String putTravelID = params[1];
+                String parameters = "&putTravelID=" + getData_position;
 
                 BufferedReader bufferedReader = null;
                 try {
@@ -114,7 +117,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
                     con.connect();
 
                     OutputStream outputStream = con.getOutputStream();
-//                    outputStream.write(parameters.getBytes("UTF-8"));
+                    outputStream.write(parameters.getBytes("UTF-8"));
                     outputStream.flush();
                     outputStream.close();
 

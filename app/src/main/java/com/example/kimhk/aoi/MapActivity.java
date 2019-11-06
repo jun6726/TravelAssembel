@@ -78,12 +78,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     TabHost tabs = Mypage.tabs;
 
-    double latitude=37.00, longitude=128.00;
-    String TravelID;
     LatLng latLng;
     CardView cardView;
     TextView txtLocationAddress;
     Intent GPSIntent;
+    String TravelID;
+    double latitude=37.00, longitude=128.00;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +159,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                     public void onClick(DialogInterface dialogInterface, int i) {
                         String Expense = ev_Expense.getText().toString();
                         Addmarker addmarker = new Addmarker();
-                        addmarker.execute("http://jun6726.cafe24.com/php_folder/add_folder/Marker_add.php", String.valueOf(TravelID), Expense, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude) );
+                        addmarker.execute("http://jun6726.cafe24.com/php_folder/add_folder/Marker_add.php", TravelID, Expense, String.valueOf(latLng.latitude), String.valueOf(latLng.longitude) );
                         addMarker(latLng);
                     }
                 });

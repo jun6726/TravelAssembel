@@ -67,7 +67,8 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
     static TabHost tabs;
     ListAdapter adapter;
 
-    String PutUserID;
+    static boolean isFirst;
+    static String PutUserID = "1028765713";
 
     private BluetoothService btService = null;
     private final Handler mHandler = new Handler() {
@@ -84,13 +85,18 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
 
         TabSetting();
 
+        isFirst = true;
+        if (isFirst == true){
+            Intent FirstCheck = new Intent(this, Login.class);
+            startActivity(FirstCheck);
+        }
+
         if(btService == null){
             btService = new BluetoothService(this,mHandler);
         }
 
         tvUserName = (TextView) findViewById(R.id.tvUserName);
         tvUserId = (TextView) findViewById(R.id.tvUserId);
-        PutUserID = tvUserId.getText().toString();
 
         travelList = (SwipeMenuListView) findViewById(R.id.Travel_List);
         travelList.setMenuCreator(creator);
@@ -109,7 +115,6 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
             }
         });
 
-        PutUserID = tvUserId.getText().toString();
         travelList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
@@ -121,9 +126,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                         break;
                     case 1:
                         // delete
-                        getData("http://jun6726.cafe24.com/php_folder/delete_folder/plan_delete.php");
-                        Intent restart = new Intent(Mypage.this, Mypage.class);
-                        startActivity(restart);
+                        getData("http://jun6726.cafe24.com/php_folder/delete_folder/plan_delete.php", PutUserID);
                         break;
                 }
                 // false : close the menu; true : not close the menu
@@ -131,7 +134,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
             }
         });
         travelArrayList = new ArrayList<HashMap<String, String>>();
-        getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_list.php"); //수정 필요
+        getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_list.php", PutUserID); //수정 필요
     }
 
     public void TabSetting() {
@@ -157,14 +160,14 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
         tabs.setOnTabChangedListener((TabHost.OnTabChangeListener) this);
     }
 
-    public void getData(String url) {
+    public void getData(String url, String UserID) {
         class GetDataJSON extends AsyncTask<String, Void, String> {
             @Override
             protected String doInBackground(String... params) {
                 String uri = params[0];
-//                String UserID = params[1];
+                String UserID = params[1];
 
-//                String parameters = "&UserID=" + UserID;
+                String parameters = "&UserID=" + UserID;
 
                 BufferedReader bufferedReader = null;
                 try {
@@ -175,7 +178,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                     con.connect();
 
                     OutputStream outputStream = con.getOutputStream();
-//                    outputStream.write(parameters.getBytes("UTF-8"));
+                    outputStream.write(parameters.getBytes("UTF-8"));
                     outputStream.flush();
                     outputStream.close();
 
@@ -198,7 +201,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
             }
         }
         GetDataJSON g = new GetDataJSON();
-        g.execute(url);
+        g.execute(url, PutUserID);
     }
 
     public void showList() {
@@ -232,6 +235,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
                     Item_select_intent = new Intent(getApplicationContext(), ItemSelect.class);
+                    Item_select_intent.putExtra("UserID", PutUserID);
                     Item_select_intent.putExtra("position", travelArrayList.get(position).get(TAG_LOCATION));
                     Item_select_intent.putExtra("TravelId", TAG_TRAVEL_ID);
                     startActivity(Item_select_intent);

@@ -187,6 +187,12 @@ public class Login extends AppCompatActivity {
                 String putUserId = String.valueOf(user_id);
                 Mypage.tvUserId.setText(putUserId+"");
                 Mypage.tvUserName.setText(userProfile.getNickname()+"님의 일정입니다.");
+
+                if (Mypage.isFirst == true) {
+                    Session.getCurrentSession().addCallback(callback);
+                    Mypage.isFirst = false;
+                    finish();
+                }
             }
 
             @Override

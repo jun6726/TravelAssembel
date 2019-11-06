@@ -95,14 +95,15 @@ public class AddTravelList extends AppCompatActivity {
                 add_marker_intent = new Intent(getApplicationContext(), MapActivity.class);
 
                 int random = (int) ((Math.random()*10));
-                if(travelLocation.getHint().equals(hint2)) {
-                    latitude = GPSAsia[random][0];
-                    longitude = GPSAsia[random][1];
-                }
+                    if(travelLocation.getHint().equals(hint2)) {
+                        latitude = GPSAsia[random][0];
+                        longitude = GPSAsia[random][1];
+                    }
                 add_marker_intent.putExtra("TravelID", getTravelId);
                 add_marker_intent.putExtra("lat",latitude);
                 add_marker_intent.putExtra("long",longitude);
                 startActivity(add_marker_intent);
+
                 travelLocation.setHint("여행 장소를 선택해주세요");
                 travelLocation.setText("");
                 travelPeriod.setHint("기간을 선택해주세요.");
@@ -263,9 +264,8 @@ public class AddTravelList extends AppCompatActivity {
                 while((line = bufferedReader.readLine()) != null){
                     sb.append(line);
                 }
-                bufferedReader.close();
                 getTravelId = sb.toString();
-                Log.d("bufferReaderTravelID", getTravelId);
+                bufferedReader.close();
                 return getTravelId;
             }catch (MalformedURLException e) {
                 e.printStackTrace();
