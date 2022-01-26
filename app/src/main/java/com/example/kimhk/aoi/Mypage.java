@@ -197,7 +197,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
             @Override
             public void onPostExecute(String result) {
                 myJSON = result;
-                showList();
+               //  showList();  //서버 만료로 리스트 조회 불가능 임시 주석 처리
             }
         }
         GetDataJSON g = new GetDataJSON();
