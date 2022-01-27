@@ -1,44 +1,31 @@
 package com.example.kimhk.aoi;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.os.AsyncTask;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.Signature;
 import android.os.Bundle;
-import android.renderscript.Element;
-import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.androidquery.AQuery;
-import com.google.android.gms.fitness.result.DataTypeResult;
-import com.kakao.auth.ISessionCallback;
-import com.kakao.auth.Session;
-import com.kakao.network.ErrorResult;
-import com.kakao.usermgmt.LoginButton;
-import com.kakao.usermgmt.UserManagement;
-import com.kakao.usermgmt.callback.LogoutResponseCallback;
-import com.kakao.usermgmt.callback.MeResponseCallback;
-import com.kakao.usermgmt.request.LogoutRequest;
-import com.kakao.usermgmt.response.model.UserProfile;
-import com.kakao.util.exception.KakaoException;
-import com.kakao.util.helper.log.Logger;
+import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import com.androidquery.AQuery;
+import com.kakao.sdk.user.UserApiClient;
+import com.kakao.sdk.user.model.Account;
+import com.kakao.sdk.user.model.User;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -47,164 +34,64 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 public class Login extends AppCompatActivity {
-    private SessionCallback callback;
-    public TextView user_nickname;
-    CircleImageView user_img;
-    LinearLayout success_layout;
-    Button logout_btn;
-    LoginButton loginButton;
-    public static long user_id;
+    private static final String TAG="사용자";
+    private ImageButton btn_login, btn_login_out;
 
-    public static Login mrequestLogout; // 메인에서 로그아웃 함수 불러주기 위한 변수
-    public static Login sendUserId;
-    AQuery aQuery;
-
+    @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mrequestLogout = this; // 메인에서 로그아웃 함수 불러주기 위한 변수
-        sendUserId = this;
-        aQuery = new AQuery(this);
-        callback = new SessionCallback();
-        Session.getCurrentSession().addCallback(callback);
+        // Log.d("GET_KEYHASH",getKeyHash());
 
-        // 카카오톡 로그인 버튼
-        loginButton = (LoginButton) findViewById(R.id.com_kakao_login);
-        loginButton.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
+        btn_login = findViewById(R.id.btn_login);
+        btn_login_out = findViewById(R.id.btn_login_out);
 
-                if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                    if (!isConnected()) {
-                        Toast.makeText(com.example.kimhk.aoi.Login.this, "인터넷 연결을 확인해주세요", Toast.LENGTH_SHORT).show();
-                    }
-                }
-                if (isConnected()) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-        });
-
-        // 로그인 성공 시 사용할 뷰
-        success_layout = (LinearLayout) findViewById(R.id.success_layout);
-        user_nickname = (TextView) findViewById(R.id.user_nickname);
-        user_img = (CircleImageView) findViewById(R.id.user_img);
-        logout_btn = (Button) findViewById(R.id.logout);
-        logout_btn.setOnClickListener(new View.OnClickListener() {
+        btn_login.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (Session.getCurrentSession().isOpened()) {
-                    requestLogout();
-                }
+                UserApiClient.getInstance().loginWithKakaoTalk(Login.this,(oAuthToken, error) -> {
+                    if (error != null) {
+                        Log.e(TAG, "로그인 실패", error);
+                    } else if (oAuthToken != null) {
+                        Log.i(TAG, "로그인 성공(토큰) : " + oAuthToken.getAccessToken());
+
+                        UserApiClient.getInstance().me((user, meError) -> {
+                            if (meError != null) {
+                                Log.e(TAG, "사용자 정보 요청 실패", meError);
+                            } else {
+                                System.out.println("로그인 완료");
+                                Log.i(TAG, user.toString());
+                                {
+                                    Log.i(TAG, "사용자 정보 요청 성공" +
+                                            "\n회원번호: "+user.getId() +
+                                            "\n이메일: "+user.getKakaoAccount().getEmail());
+                                }
+                                Account user1 = user.getKakaoAccount();
+                                System.out.println("사용자 계정" + user1);
+                            }
+                            return null;
+                        });
+                    }
+                    return null;
+                });
+
             }
         });
 
-        if (Session.getCurrentSession().isOpened()) {
-            requestMe();
-        } else {
-            success_layout.setVisibility(View.GONE);
-            loginButton.setVisibility(View.VISIBLE);
-        }
-    }
-
-    //인터넷 연결상태 확인
-    public boolean isConnected() {
-        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
-        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            return true;
-        }
-        return false;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (Session.getCurrentSession().handleActivityResult(requestCode, resultCode, data)) {
-            return;
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public class SessionCallback implements ISessionCallback {
-
-        @Override
-        public void onSessionOpened() {
-            //access token을 성공적으로 발급 받아 valid access token을 가지고 있는 상태. 일반적으로 로그인 후의 다음 activity로 이동한다.
-            if (Session.getCurrentSession().isOpened()) { // 한 번더 세션을 체크해주었습니다.
-                requestMe();
-            }
-        }
-
-        @Override
-        public void onSessionOpenFailed(KakaoException exception) {
-            if (exception != null) {
-                Logger.e(exception);
-            }
-        }
-    }
-
-
-    public void requestLogout() {
-        success_layout.setVisibility(View.GONE);
-        loginButton.setVisibility(View.VISIBLE);
-        UserManagement.requestLogout(new LogoutResponseCallback() {
+        btn_login_out.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCompleteLogout() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(com.example.kimhk.aoi.Login.this, "로그아웃 성공", Toast.LENGTH_SHORT).show();
+            public void onClick(View v) {
+                UserApiClient.getInstance().logout(error -> {
+                    if (error != null) {
+                        Log.e(TAG, "로그아웃 실패, SDK에서 토큰 삭제됨", error);
+                    }else{
+                        Log.e(TAG, "로그아웃 성공, SDK에서 토큰 삭제됨");
                     }
+                    return null;
                 });
             }
         });
-    }
-
-    public void requestMe() {
-        success_layout.setVisibility(View.VISIBLE);
-        loginButton.setVisibility(View.GONE);
-
-        UserManagement.requestMe(new MeResponseCallback() {
-            @Override
-            public void onFailure(ErrorResult errorResult) {
-                Log.e("onFailure", errorResult + "");
-            }
-
-            @Override
-            public void onSessionClosed(ErrorResult errorResult) {Log.e("onSessionClosed", errorResult + "");}
-
-            @Override
-            public void onSuccess(UserProfile userProfile) {
-                Log.e("onSuccess", userProfile.toString());
-                user_nickname.setText(userProfile.getNickname());
-                aQuery.id(user_img).image(userProfile.getThumbnailImagePath()); // <- 프로필 작은 이미지 , userProfile.getProfileImagePath() <- 큰 이미지
-                user_id = userProfile.getId();
-
-                String putUserId = String.valueOf(user_id);
-                Mypage.tvUserId.setText(putUserId+"");
-                Mypage.tvUserName.setText(userProfile.getNickname()+"님의 일정입니다.");
-
-                if (Mypage.isFirst == true) {
-                    Session.getCurrentSession().addCallback(callback);
-                    Mypage.isFirst = false;
-                    finish();
-                }
-            }
-
-            @Override
-            public void onNotSignedUp() {
-                Log.e("onNotSignedUp", "onNotSignedUp");
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Session.getCurrentSession().removeCallback(callback);
     }
 }

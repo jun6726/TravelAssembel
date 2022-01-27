@@ -5,12 +5,9 @@ import android.content.Intent;
 import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
+
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -72,7 +69,7 @@ public class ItemSelect extends AppCompatActivity implements OnMapReadyCallback 
 //        Position_send position_send = new Position_send();
 //        position_send.execute("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
 
-        getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
+//        getData("http://jun6726.cafe24.com/php_folder/show_folder/Travel_select.php", putTravelID);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);

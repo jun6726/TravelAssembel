@@ -34,7 +34,7 @@ dependencies {
     implementation 'com.android.support:support-annotations:28.0.0'
 
     // 카카오 로그인 sdk를 사용하기 위해 필요.
-    implementation group: 'com.kakao.sdk', name: 'usermgmt', version: project.KAKAO_SDK_VERSION // KaKaoSDK
+    implementation "com.kakao.sdk:v2-user:2.8.5" // KaKaoSDK
     implementation 'com.googlecode.android-query:android-query:0.25.9' //AQuery
     implementation 'de.hdodenhof:circleimageview:1.2.1' // CircleImageView[출처] [Android] 카카오톡 로그인 연동 (최신버전 1.4.1)(2) - 프로젝트 생성 및 설정|작성자 Printf
 

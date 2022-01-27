@@ -11,9 +11,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -29,9 +26,6 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.example.kimhk.aoi.Bluetooth.MainActivity;
-import com.kakao.auth.ISessionCallback;
-import com.kakao.auth.Session;
-import com.kakao.util.exception.KakaoException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -77,6 +71,7 @@ public class Mypage extends TabActivity implements TabHost.OnTabChangeListener {
             super.handleMessage(msg);
         }
     };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

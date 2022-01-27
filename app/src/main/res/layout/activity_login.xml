@@ -1,57 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    tools:context=".Login"
+    android:orientation="vertical"
+    >
 
     <LinearLayout
+        android:gravity="center"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.example.junma.all_in_one.Kakao"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:gravity="center">
+        android:layout_weight="1">
 
-        <LinearLayout
-            android:id="@+id/success_layout"
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_img"
-                android:layout_width="150dp"
-                android:layout_height="155dp"
-                android:src="@mipmap/ic_launcher" />
-
-            <TextView
-                android:id="@+id/user_nickname"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="nickname"
-                android:textSize="20sp"
-                android:textColor="@color/mdtp_white"/>
-
-            <Button
-                android:id="@+id/logout"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:background="@color/default_connected_day_text_color"
-                android:text="로그아웃"
-                android:textColor="#fff"
-                android:textStyle="bold" />
-
-
-        </LinearLayout>
-
-
-        <com.kakao.usermgmt.LoginButton
-            android:id="@+id/com_kakao_login"
-            android:layout_width="300dp"
-            android:layout_height="70dp"
-            android:paddingTop="10dp" />
-
-
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="kakao 로그인"
+            android:textStyle="bold"
+            />
+        <ImageButton
+            android:id="@+id/btn_login"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/kakao_login_medium_narrow"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:text="kakao 로그아웃"
+            android:textStyle="bold"
+            />
+        <ImageButton
+            android:id="@+id/btn_login_out"
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/kakao_login_medium_narrow"
+            />
     </LinearLayout>
-</RelativeLayout>
+
+</LinearLayout>
