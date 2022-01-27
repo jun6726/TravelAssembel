@@ -26,6 +26,8 @@ import com.kakao.sdk.user.model.User;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -37,13 +39,13 @@ public class Login extends AppCompatActivity {
     private static final String TAG="사용자";
     private ImageButton btn_login, btn_login_out;
 
+    Map<String, String> userMap = new HashMap<String, String>();
+
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        // Log.d("GET_KEYHASH",getKeyHash());
 
         btn_login = findViewById(R.id.btn_login);
         btn_login_out = findViewById(R.id.btn_login_out);
@@ -64,9 +66,13 @@ public class Login extends AppCompatActivity {
                                 System.out.println("로그인 완료");
                                 Log.i(TAG, user.toString());
                                 {
+                                    userMap = user.getProperties();
                                     Log.i(TAG, "사용자 정보 요청 성공" +
                                             "\n회원번호: "+user.getId() +
-                                            "\n이메일: "+user.getKakaoAccount().getEmail());
+                                            "\n이메일: "+user.getKakaoAccount().getEmail() +
+                                            "\n회원이름 : "+user.getProperties() +
+                                            "\n프로퍼티 : "+userMap.get("nickname"));
+                                    Mypage.tvUserName.setText(userMap.get("nickname")+"님의 일정");
                                 }
                                 Account user1 = user.getKakaoAccount();
                                 System.out.println("사용자 계정" + user1);
@@ -76,7 +82,6 @@ public class Login extends AppCompatActivity {
                     }
                     return null;
                 });
-
             }
         });
 
@@ -89,6 +94,7 @@ public class Login extends AppCompatActivity {
                     }else{
                         Log.e(TAG, "로그아웃 성공, SDK에서 토큰 삭제됨");
                     }
+                    userMap.clear();
                     return null;
                 });
             }

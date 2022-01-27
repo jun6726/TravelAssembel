@@ -16,7 +16,6 @@ import com.kakao.sdk.common.KakaoSdk;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-
 public class App extends Application {
     private static App instance; // 카카오 로그인 연동
 
@@ -29,6 +28,7 @@ public class App extends Application {
         getKeyHash();
     }
 
+    //해시키 Log 추출
     public void getKeyHash() {
         PackageInfo packageInfo = null;
         try {
@@ -48,5 +48,13 @@ public class App extends Application {
                 Log.e("KeyHash", "Unable to get MessageDigest. signature=" + signature, e);
             }
         }
+    }
+    //해시키 Log 추출 끝
+
+    public static App getAppContext() {
+        if (instance == null) {
+            throw new IllegalStateException("This Application does not inherit com.kakao.GlobalApplication");
+        }
+        return instance;
     }
 }
