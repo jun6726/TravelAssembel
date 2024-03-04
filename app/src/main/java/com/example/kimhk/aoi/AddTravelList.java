@@ -140,92 +140,52 @@ public class AddTravelList extends AppCompatActivity {
 
         ListView listView = (ListView) dialog.findViewById(R.id.listview);
 
-        switch (position){
-            case 0:
-                ArrayAdapter arrayAdapter0 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameAsia);
-                listView.setAdapter(arrayAdapter0);
+        ArrayAdapter arrayAdapter;
+        String[] countryNames;
+        double[][] coordinates;
 
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        travelLocation.setText(countryNameAsia[position]);
-                        latitude = GPSAsia[position][0];
-                        longitude = GPSAsia[position][1];
-                        dialog.dismiss();
-                    }
-                });
+        switch (position) {
+            case 0:
+                countryNames = countryNameAsia;
+                coordinates = GPSAsia;
                 break;
             case 1:
-                ArrayAdapter arrayAdapter1 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameEurope);
-                listView.setAdapter(arrayAdapter1);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        travelLocation.setText(countryNameEurope[position]);
-                        latitude = GPSAsia[position][0];
-                        longitude = GPSAsia[position][1];
-                        dialog.dismiss();
-                    }
-                });
+                countryNames = countryNameEurope;
+                coordinates = GPSEurope;
                 break;
             case 2:
-                ArrayAdapter arrayAdapter2 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameNorthAmerica);
-                listView.setAdapter(arrayAdapter2);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        travelLocation.setText(countryNameNorthAmerica[position]);
-                        latitude = GPSNorthAmerica[position][0];
-                        longitude = GPSNorthAmerica[position][1];
-                        dialog.dismiss();
-                    }
-                });
+                countryNames = countryNameNorthAmerica;
+                coordinates = GPSNorthAmerica;
                 break;
             case 3:
-                ArrayAdapter arrayAdapter3 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameSouthAmerica);
-                listView.setAdapter(arrayAdapter3);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        travelLocation.setText(countryNameSouthAmerica[position]);
-                        latitude = GPSSouthAmerica[position][0];
-                        longitude = GPSSouthAmerica[position][1];
-                        dialog.dismiss();
-                    }
-                });
+                countryNames = countryNameSouthAmerica;
+                coordinates = GPSSouthAmerica;
                 break;
             case 4:
-                ArrayAdapter arrayAdapter4 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameAfrica);
-                listView.setAdapter(arrayAdapter4);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        travelLocation.setText(countryNameAfrica[position]);
-                        latitude = GPSAfrica[position][0];
-                        longitude = GPSAfrica[position][1];
-                        dialog.dismiss();
-                    }
-                });
+                countryNames = countryNameAfrica;
+                coordinates = GPSAfrica;
                 break;
             case 5:
-                ArrayAdapter arrayAdapter5 = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNameAustralia);
-                listView.setAdapter(arrayAdapter5);
-
-                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                        travelLocation.setText(countryNameAustralia[position]);
-                        latitude = GPSAustralia[position][0];
-                        longitude = GPSAustralia[position][1];
-                        dialog.dismiss();
-                    }
-                });
+                countryNames = countryNameAustralia;
+                coordinates = GPSAustralia;
                 break;
+            default:
+                // Handle default case
+                return;
         }
+
+        arrayAdapter = new ArrayAdapter(this, R.layout.continent_item, R.id.tvTravel_id, countryNames);
+        listView.setAdapter(arrayAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                travelLocation.setText(countryNames[position]);
+                latitude = coordinates[position][0];
+                longitude = coordinates[position][1];
+                dialog.dismiss();
+            }
+        });
 
         dialog.show();
     }
