@@ -60,6 +60,7 @@
         android:layout_marginTop="30dp"
         android:layout_marginEnd="40dp"
         android:ems="10"
+        android:focusable="false"
         android:hint="기간을 선택해주세요"
         android:inputType="textPersonName"
         android:textAlignment="center"

@@ -1,0 +1,18 @@
+
+// DB 생성
+
+CREATE TABLE IF NOT EXISTS Travel (
+    Travel_id INT AUTO_INCREMENT PRIMARY KEY,
+    User_id INT,
+    Date_start DATE,
+    Date_end DATE,
+    Location VARCHAR(255),
+    shared BOOLEAN
+);
+
+
+CREATE TABLE IF NOT EXISTS Plan (
+    Plan_id INT AUTO_INCREMENT PRIMARY KEY,
+    Travel_id INT,
+    Day DATE
+);
